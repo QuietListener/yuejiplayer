@@ -1,0 +1,13 @@
+#Sat Apr 29 01:45:41 CST 2017
+renamed.3=classes4.dex
+renamed.2=classes3.dex
+renamed.1=classes.dex
+renamed.0=classes2.dex
+base.3=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.1.1_346f4ef85a94fbc369800f27f220f9937bcc6d5d
+base.2=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.1.1_a27e800493bccb0d151a22537c238e66c76a1ba8
+base.1=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/classes_94e051e7464658f35d53b7ad60f643ce00e5ea2c
+base.0=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b20c2104a3f61d55b0052048a6a5bd4d77257326
+file.3=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/support-annotations-23.1.1_346f4ef85a94fbc369800f27f220f9937bcc6d5d/classes.dex
+file.2=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/internal_impl-23.1.1_a27e800493bccb0d151a22537c238e66c76a1ba8/classes.dex
+file.1=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/classes_94e051e7464658f35d53b7ad60f643ce00e5ea2c/classes.dex
+file.0=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10/classes_b20c2104a3f61d55b0052048a6a5bd4d77257326/classes.dex

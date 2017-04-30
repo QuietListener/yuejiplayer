@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.1'
+    }
+}
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion '25.0.0'
+
+    defaultConfig {
+        applicationId "com.compdigitec.libvlcandroidsample"
+        minSdkVersion 14
+        targetSdkVersion 17
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+
+    sourceSets.main {
+        manifest.srcFile 'AndroidManifest.xml'
+        java.srcDirs = ['src']
+        resources.srcDirs = ['src']
+        aidl.srcDirs = ['src']
+        renderscript.srcDirs = ['src']
+        res.srcDirs = ['res']
+        assets.srcDirs = ['assets']
+    }
+}
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs '.'
+    }
+}
+
+dependencies {
+    compile 'com.android.support:support-v4:21.0.3'
+    //compile(name:'libvlc', ext:'aar')
+    // https://mvnrepository.com/artifact/de.mrmaffen/vlc-android-sdk
+    compile group: 'de.mrmaffen', name: 'vlc-android-sdk', version: '2.0.6'
+
+}

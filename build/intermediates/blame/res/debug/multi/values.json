@@ -1,0 +1,220 @@
+[
+    {
+        "outputFile": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/incremental/mergeDebugResources/merged.dir/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 57,
+                    "endOffset": 108
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 89,
+                        "endColumn": 57,
+                        "endOffset": 142
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 113,
+                    "endColumn": 55,
+                    "endOffset": 164
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 147,
+                        "endColumn": 55,
+                        "endOffset": 198
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 169,
+                    "endColumn": 52,
+                    "endOffset": 217
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 4,
+                        "startOffset": 56,
+                        "endColumn": 52,
+                        "endOffset": 104
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 222,
+                    "endColumn": 58,
+                    "endOffset": 276
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 109,
+                        "endColumn": 58,
+                        "endOffset": 163
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 281,
+                    "endColumn": 39,
+                    "endOffset": 316
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 168,
+                        "endColumn": 39,
+                        "endOffset": 203
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 321,
+                    "endColumn": 80,
+                    "endOffset": 397
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 208,
+                        "endColumn": 80,
+                        "endOffset": 284
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 402,
+                    "endColumn": 66,
+                    "endOffset": 464
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 289,
+                        "endColumn": 66,
+                        "endOffset": 351
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 469,
+                    "endColumn": 43,
+                    "endOffset": 508
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 356,
+                        "endColumn": 43,
+                        "endOffset": 395
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 513,
+                    "endColumn": 39,
+                    "endOffset": 548
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 400,
+                        "endColumn": 39,
+                        "endOffset": 435
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 11,
+                    "startColumn": 4,
+                    "startOffset": 553,
+                    "endLine": 17,
+                    "endColumn": 12,
+                    "endOffset": 839
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/styles.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 186,
+                        "endLine": 12,
+                        "endColumn": 12,
+                        "endOffset": 472
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 844,
+                    "endLine": 20,
+                    "endColumn": 12,
+                    "endOffset": 999
+                },
+                "from": {
+                    "file": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/values/styles.xml",
+                    "position": {
+                        "startLine": 15,
+                        "startColumn": 4,
+                        "startOffset": 510,
+                        "endLine": 17,
+                        "endColumn": 12,
+                        "endOffset": 665
+                    }
+                }
+            }
+        ]
+    }
+]

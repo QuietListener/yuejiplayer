@@ -1,0 +1,33 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="vertical"
+    tools:context=".SampleActivity" >
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <SurfaceView
+            android:id="@+id/surface"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <com.compdigitec.libvlcandroidsample.SubtitleView
+            android:id="@+id/subtitle_view"
+            android:layout_width="fill_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom"
+            />
+
+        <SeekBar
+            android:id="@+id/seek_bar"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </FrameLayout>
+
+</LinearLayout>

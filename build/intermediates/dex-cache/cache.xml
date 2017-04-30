@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="false"
+        jar="/Users/junjun/.android/build-cache/7216cdf0d5c14e48a7d71c810c9a21f622c75e01/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="b0e05029df1c15f67fcae8d8c13f158f1c244ca2">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/pre-dexed/debug/classes_94e051e7464658f35d53b7ad60f643ce00e5ea2c.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="026f3d7b5f07a540eeb86513129d9941d0b575fa">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_3ea7a7f3b2b1ee130fdc8ba173c854a854b9eb33/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/junjun/.android/build-cache/a24d3016337f0589b2def9e83316b7239bba54cc/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="6cbc7773921fcfedbe55657578f0cbfe614778dc">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/pre-dexed/debug/classes_b20c2104a3f61d55b0052048a6a5bd4d77257326.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/junjun/.android/build-cache/a24d3016337f0589b2def9e83316b7239bba54cc/output/jars/libs/internal_impl-23.1.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="a4de9c81ae239414e1ed0f86441b02abaf29bca9">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/pre-dexed/debug/internal_impl-23.1.1_a27e800493bccb0d151a22537c238e66c76a1ba8.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="25.0.0"
+        sha1="510aa6efc159983dfbffa676a0dae37568c0a46f">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_87ce20d1cfd39ebd2bec8741110d67efbd7a110e/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/junjun/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.1.1/support-annotations-23.1.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8d680ba5a623724d1fb0e81c36a790f023a6cede">
+        <dex dex="/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/pre-dexed/debug/support-annotations-23.1.1_346f4ef85a94fbc369800f27f220f9937bcc6d5d.jar" />
+    </item>
+
+</items>
