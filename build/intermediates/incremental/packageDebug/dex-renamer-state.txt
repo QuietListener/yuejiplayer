@@ -1,4 +1,4 @@
-#Sun Apr 30 21:24:01 CST 2017
+#Mon May 01 16:45:01 CST 2017
 base.0=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_3ea7a7f3b2b1ee130fdc8ba173c854a854b9eb33
 renamed.1=classes.dex
 renamed.0=classes2.dex

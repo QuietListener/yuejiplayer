@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sun Apr 30 21:24:02 CST 2017
+#Mon May 01 16:45:02 CST 2017
 25.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/drawable-xhdpi-v4/ic_menu_refresh.png
 41.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/transforms/stripDebugSymbol/debug/folders/2000/1f/main
 25.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_

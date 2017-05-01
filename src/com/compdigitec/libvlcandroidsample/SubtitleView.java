@@ -5,11 +5,19 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.compdigitec.subtitle.subtitleFile.Caption;
+import com.compdigitec.subtitle.subtitleFile.FormatSRT;
+import com.compdigitec.subtitle.subtitleFile.TimedTextFileFormat;
+import com.compdigitec.subtitle.subtitleFile.TimedTextObject;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
@@ -43,8 +51,8 @@ public class SubtitleView extends TextView implements Runnable{
     public void run() {
         if (player !=null && track!= null){
             int seconds = (int)(player.getTime() / 1000);
-            setText((DEBUG?"[" + secondsToDuration(seconds) + "] ":"")
-                    + getTimedText(player.getTime()));
+            String text = getTimedText(player.getTime());
+            setText(text);
         }
         postDelayed(this, UPDATE_INTERVAL);
     }
@@ -87,20 +95,50 @@ public class SubtitleView extends TextView implements Runnable{
     //Based on https://github.com/sannies/mp4parser/
     //Apache 2.0 Licence at: https://github.com/sannies/mp4parser/blob/master/LICENSE
 
-    public static TreeMap<Long, Line> parse(InputStream is) throws IOException {
-        LineNumberReader r = new LineNumberReader(new InputStreamReader(is, "UTF-8"));
+    public static TreeMap<Long, Line> parse(InputStream is) throws Exception {
+//        LineNumberReader r = new LineNumberReader(new InputStreamReader(is,"utf-8"));
         TreeMap<Long, Line> track = new TreeMap<>();
-        while ((r.readLine()) != null) /*Read cue number*/{
-            String timeString = r.readLine();
-            String lineString = "";
-            String s;
-            while (!((s = r.readLine()) == null || s.trim().equals(""))) {
-                lineString += s + "\n";
-            }
-            long startTime = parse(timeString.split("-->")[0]);
-            long endTime = parse(timeString.split("-->")[1]);
+//        while ((r.readLine()) != null) /*Read cue number*/{
+//            String timeString = r.readLine();
+//            String lineString = "";
+//            String s;
+//            while (!((s = r.readLine()) == null || s.trim().equals(""))) {
+//                lineString += s + "\n";
+//            }
+//            long startTime = parse(timeString.split("-->")[0]);
+//            long endTime = parse(timeString.split("-->")[1]);
+//            track.put(startTime, new Line(startTime, endTime, lineString));
+//        }
+
+        TimedTextObject tto;
+        TimedTextFileFormat ttff;
+
+        ttff = new FormatSRT();
+        tto = ttff.parseFile(null, is);
+        //first we check if the TimedTextObject had been built, otherwise...
+        if(!tto.built)
+            return track;
+
+        //we will write the lines in an ArrayList,
+        int index = 0;
+        //the minimum size of the file is 4*number of captions, so we'll take some extra space.
+        ArrayList<String> file = new ArrayList<>(5 * tto.captions.size());
+        //we iterate over our captions collection, they are ordered since they come from a TreeMap
+        Collection<Caption> c = tto.captions.values();
+        Iterator<Caption> itr = c.iterator();
+        int captionNumber = 1;
+
+        while(itr.hasNext()){
+            //new caption
+            Caption current = itr.next();
+            Log.d(TAG,current.toString());
+            long startTime = current.start.getMseconds();
+            long endTime = current.end.getMseconds();
+            String lineString = current.content;
             track.put(startTime, new Line(startTime, endTime, lineString));
         }
+
+        Log.d(TAG,"");
         return track;
     }
 

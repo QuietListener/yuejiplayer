@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sun Apr 30 21:23:52 CST 2017
+#Mon May 01 16:44:51 CST 2017
 2.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
 5.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/activity_main.xml
 5.set=ANDROID_RESOURCE

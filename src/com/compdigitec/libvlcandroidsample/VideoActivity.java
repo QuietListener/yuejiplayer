@@ -42,6 +42,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     // display surface
     private SurfaceView mSurface;
     private SubtitleView mSubtitleView;
+    private SurfaceView subtitleView1;
+
     private SurfaceHolder holder;
 
     private SeekBar seek_bar;
@@ -97,12 +99,17 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         // Receive path to play from intent
         Intent intent = getIntent();
         mFilePath = intent.getExtras().getString(LOCATION);
+        //srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
+
         srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
 
         Log.d(TAG, "Playing back " + mFilePath);
 
         mSurface = (SurfaceView) findViewById(R.id.surface);
         mSubtitleView = (SubtitleView) findViewById(R.id.subtitle_view);
+        mSubtitleView.setVisibility(View.VISIBLE);
+        //subtitleView1 =  (SurfaceView) findViewById(R.id.subtitle_view1);
+
         mSubtitleView.setSubSource(srtFilePath , null);
 
         seek_bar = (SeekBar)findViewById(R.id.seek_bar);
@@ -120,6 +127,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 //        holder.addCallback(this);
 
         createPlayer(mFilePath);
+
         mSubtitleView.setPlayer(mMediaPlayer);
         mSubtitleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -235,6 +243,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             final IVLCVout vout = mMediaPlayer.getVLCVout();
 
             vout.setVideoView(mSurface);
+            //vout.setSubtitlesView(subtitleView1);
 
             vout.addCallback(this);
             vout.attachViews();
@@ -303,7 +312,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     {
 
     }
-    private static class MyPlayerListener implements MediaPlayer.EventListener {
+    private  class MyPlayerListener implements MediaPlayer.EventListener {
         private WeakReference<VideoActivity> mOwner;
 
         public MyPlayerListener(VideoActivity owner) {
@@ -320,11 +329,16 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                     player.releasePlayer();
                     break;
                 case MediaPlayer.Event.Playing:
-//                    MediaPlayer.TrackDescription[] tds = player.mMediaPlayer.getSpuTracks();
 
-//                    //Media.Slave slave = new Media.Slave(Media.Slave.Type.Subtitle,4,player.srtFilePath);
-//                    //player.mMediaPlayer.getMedia().addSlave(slave);
-//                    if(tds.length > 0)
+
+                      player.mMediaPlayer.setSpuTrack(-1);
+//                    MediaPlayer.TrackDescription[] tds = player.mMediaPlayer.getSpuTracks();
+//
+//                    Media.Slave slave = new Media.Slave(Media.Slave.Type.Subtitle,4,player.srtFilePath+".jpg");
+//                    player.mMediaPlayer.getMedia().addSlave(slave);
+//
+//
+//                    if(tds!= null && tds.length > 0)
 //                    {
 //                        for (int i = tds.length - 1; i >= 0; i--) {
 //                            MediaPlayer.TrackDescription td = tds[i];
@@ -333,6 +347,14 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 //                                break;
 //                            }
 //                        }
+//
+//                        String td_ = "";
+//                        for (int i = tds.length - 1; i >= 0; i--) {
+//                            MediaPlayer.TrackDescription td = tds[i];
+//                            td_+=td.id +";"+td.name+". ";
+//                        }
+//
+//                        Toast.makeText(VideoActivity.this,td_,Toast.LENGTH_LONG).show();
 //                    }
 
                     int total_second = (int)player.mMediaPlayer.getMedia().getDuration()/1000;
