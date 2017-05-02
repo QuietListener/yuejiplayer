@@ -1,8 +1,12 @@
 package com.compdigitec.libvlcandroidsample;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -10,6 +14,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -17,6 +22,8 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +34,7 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.AndroidUtil;
 import java.io.File;
+import java.util.regex.*;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -128,12 +136,14 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         createPlayer(mFilePath);
 
+
         mSubtitleView.setPlayer(mMediaPlayer);
         mSubtitleView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 String text = ((TextView)view).getText().toString();
-                Toast.makeText(VideoActivity.this, text, Toast.LENGTH_LONG).show();
+                Toast.makeText(VideoActivity.this, text, Toast.LENGTH_SHORT).show();
+                dialog(text);
                 return false;
             }
         });
@@ -141,10 +151,47 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     }
 
+    protected void dialog(String text) {
+
+        String[] words={};
+        if(text!=null)
+        {
+            words = text.split(" ");
+        }
+        LayoutInflater mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = mInflater.inflate(R.layout.alert_dialog, null);
+        LinearLayout layout = (LinearLayout) view.findViewById(R.id.id_recordlayout);
+        layout.setPadding(2, 2, 2, 2);
+        Pattern p = Pattern.compile("[a-zA-Z|-]+-*[a-zA-Z|-]+");
+        for (int i = 0; i < words.length; i++) {
+            String name = words[i];
+            name = name.replaceAll("[\'|\\.|\"]","").trim();
+            if (name.length() <= 2 || !p.matcher(name).matches())
+                continue;
+            TextView tv = new TextView(this);
+            tv.setTextColor(Color.WHITE);
+            tv.setText(words[i]);
+            layout.addView(tv);
+        }
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(VideoActivity.this);
+        //builder.setTitle("选择单词查询单词");
+        builder.setView(view);
+
+//         builder.setNegativeButton("继续", new DialogInterface.OnClickListener() {
+//          @Override
+//          public void onClick(DialogInterface dialog, int which) {
+//           dialog.dismiss();
+//          }
+//         });
+        builder.create().show();
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        setSize(100, 100);
+        setSize(mVideoWidth, mVideoHeight);
     }
 
     @Override
@@ -288,7 +335,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         // store video size
         mVideoWidth = width;
         mVideoHeight = height;
-        //setSize(mVideoWidth, mVideoHeight);
+        setSize(mVideoWidth, mVideoHeight);
     }
 
     public void surfaceCreated(SurfaceHolder var1){};

@@ -1,6 +1,7 @@
 package com.compdigitec.libvlcandroidsample;
 
 import android.content.Context;
+import android.text.Spanned;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.io.File;
 import org.videolan.libvlc.MediaPlayer;
+import android.text.Html;
 
 /**
  * Created by MHDante on 2015-07-26.
@@ -52,7 +54,10 @@ public class SubtitleView extends TextView implements Runnable{
         if (player !=null && track!= null){
             int seconds = (int)(player.getTime() / 1000);
             String text = getTimedText(player.getTime());
-            setText(text);
+
+            Spanned sp =  Html.fromHtml(text);
+
+            setText(sp);
         }
         postDelayed(this, UPDATE_INTERVAL);
     }

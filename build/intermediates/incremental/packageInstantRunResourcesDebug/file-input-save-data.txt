@@ -1,24 +1,27 @@
 #Internal package file, do not edit.
-#Mon May 01 16:44:51 CST 2017
+#Tue May 02 23:33:54 CST 2017
 2.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
-5.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/activity_main.xml
+5.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/drawable-xhdpi-v4/ic_launcher.png
 5.set=ANDROID_RESOURCE
 3.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
-6.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/sample.xml
+6.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/activity_main.xml
 2.set=ANDROID_RESOURCE
 4.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
-count=7
+7.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/sample.xml
+7.set=ANDROID_RESOURCE
+count=8
 0.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/menu/main.xml
 5.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
 4.set=ANDROID_RESOURCE
 6.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
 1.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/drawable-xhdpi-v4/ic_menu_refresh.png
 1.set=ANDROID_RESOURCE
-2.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/resources.arsc
+7.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
+2.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/layout/alert_dialog.xml
 6.set=ANDROID_RESOURCE
 0.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
-3.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/AndroidManifest.xml
+3.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/resources.arsc
 3.set=ANDROID_RESOURCE
 1.base=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_
-4.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/res/drawable-xhdpi-v4/ic_launcher.png
+4.file=/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/resources-debug.ap_/AndroidManifest.xml
 0.set=ANDROID_RESOURCE

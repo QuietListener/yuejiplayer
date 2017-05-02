@@ -6,5 +6,9 @@
     {
         "merged": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/merged/debug/layout/sample.xml",
         "source": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/layout/sample.xml"
+    },
+    {
+        "merged": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/build/intermediates/res/merged/debug/layout/alert_dialog.xml",
+        "source": "/Users/junjun/Documents/项目/java/android/edwardcw-libvlc-android-sample/res/layout/alert_dialog.xml"
     }
 ]
