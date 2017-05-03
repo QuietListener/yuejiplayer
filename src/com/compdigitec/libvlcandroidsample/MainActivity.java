@@ -1,12 +1,16 @@
 package com.compdigitec.libvlcandroidsample;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -19,6 +23,7 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 
 import java.io.File;
+import java.util.Date;
 
 public class MainActivity extends Activity {
     public final static String TAG = "MainActivity";
@@ -26,6 +31,7 @@ public class MainActivity extends Activity {
     DirectoryAdapter mAdapter;
     LibVLC mLibVLC = null;
     MediaPlayer mMediaPlayer = null;
+    DBHelper helper=null;
 
     boolean mPlayingVideo = false; // Don't destroy libVLC if the video activity is playing.
 
@@ -77,6 +83,18 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         // Initialize the LibVLC multimedia framework.
         // This is required before doing anything with LibVLC.
+
+        try {
+                if(helper == null)
+                     helper = new DBHelper(this);
+                helper.createDataBase();
+
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         try {
             mLibVLC = new LibVLC(this);
         } catch(IllegalStateException e) {
@@ -91,6 +109,40 @@ public class MainActivity extends Activity {
 
         // Set up the UI elements.
         mAdapter = new DirectoryAdapter();
+        Button btn_test = (Button)findViewById(R.id.main_btn);
+        btn_test.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+
+                SQLiteDatabase db = MainActivity.this.helper.getWritableDatabase();
+
+
+                ContentValues cv = new ContentValues();
+                cv.put("word",new Date().getTime()+"");
+                cv.put("mean_cn", new Date().getTime()+"");
+                long ret = db.insert("word",null,cv);
+
+                db.close();
+                db = null;
+
+                db = MainActivity.this.helper.getReadableDatabase();
+                Cursor cursor = db.query("word",null,null,null,null,null,null);
+
+                String words = "";
+
+                //使用cursor.moveToNext()把游标下移一行。游标默认在第一行的上一行。
+                while (cursor.moveToNext()) {
+                    //使用GetString获取列中的值。参数为使用cursor.getColumnIndex("name")获取的序号。
+                    String word =cursor.getString(cursor.getColumnIndex("mean_cn"));
+                    words += (word+";");
+                }
+                db.close();
+                Toast.makeText(MainActivity.this, words,Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
+
         Button load_a_mp3 = (Button) findViewById(R.id.load_a_mp3);
         load_a_mp3.setOnClickListener(mSimpleListener);
         final ListView mediaView = (ListView) findViewById(R.id.mediaView);
@@ -137,8 +189,10 @@ public class MainActivity extends Activity {
     public void onStop() {
         super.onStop();
         if(!mPlayingVideo) {
-            mMediaPlayer.stop();
-            mLibVLC.release();
+            if (mMediaPlayer!=null)
+                mMediaPlayer.stop();
+            if(mLibVLC!=null)
+                mLibVLC.release();
             mLibVLC = null;
         }
     }

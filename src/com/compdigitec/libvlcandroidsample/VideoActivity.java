@@ -96,6 +96,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 mMediaPlayer.setTime(time);
             }
             return false;
+
         }
     }
 
