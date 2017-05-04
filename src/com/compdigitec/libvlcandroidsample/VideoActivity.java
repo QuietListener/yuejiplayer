@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,6 +36,11 @@ import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 import org.videolan.libvlc.util.AndroidUtil;
 import java.io.File;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.*;
 
 import java.lang.ref.WeakReference;
@@ -65,6 +72,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     private Handler mHandler = new Handler();
 
     private GestureDetectorCompat mDetector;
+
+    DBHelper helper = null;
 
     public MediaPlayer getMediaPlayer()
     {
@@ -103,6 +112,18 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        try {
+            if(helper == null)
+                helper = new DBHelper(this);
+            helper.createDataBase();
+
+
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
         setContentView(R.layout.sample);
 
         // Receive path to play from intent
@@ -152,6 +173,32 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     }
 
+    private  Map<String,String> queryDB(List<String> words)
+    {
+        SQLiteDatabase db = null;
+        Map<String,String> ret = new TreeMap<>();
+        try {
+            db = this.helper.getReadableDatabase();
+            for (String word : words) {
+                Cursor cursor = db.query("words",null,"word='good'",null,null,null,null);
+                //使用cursor.moveToNext()把游标下移一行。游标默认在第一行的上一行。
+                while (cursor.moveToNext()) {
+                    //使用GetString获取列中的值。参数为使用cursor.getColumnIndex("name")获取的序号。
+                    String mean_cn = cursor.getString(cursor.getColumnIndex("mean_cn"));
+                    ret.put(word,mean_cn);
+                    break;
+                }
+            }
+        }
+        finally
+        {
+            if(db!=null)
+                db.close();
+        }
+
+        return ret;
+    }
+
     protected void dialog(String text) {
 
         String[] words={};
@@ -159,22 +206,33 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         {
             words = text.split(" ");
         }
+
+        Pattern p = Pattern.compile("[a-zA-Z|-]+-*[a-zA-Z|-]+");
+        List<String> words_ = new ArrayList<>();
+        for (int i = 0; i < words.length; i++)
+        {
+            String name = words[i];
+            name = name.replaceAll("[\'|\\.|\"]", "").trim();
+            if (name.length() <= 2 || !p.matcher(name).matches())
+                continue;
+
+            words_.add(name);
+        }
+
+        Map<String,String> word2mean_cn = queryDB(words_);
+
         LayoutInflater mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mInflater.inflate(R.layout.alert_dialog, null);
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.id_recordlayout);
         layout.setPadding(2, 2, 2, 2);
-        Pattern p = Pattern.compile("[a-zA-Z|-]+-*[a-zA-Z|-]+");
-        for (int i = 0; i < words.length; i++) {
-            String name = words[i];
-            name = name.replaceAll("[\'|\\.|\"]","").trim();
-            if (name.length() <= 2 || !p.matcher(name).matches())
-                continue;
+
+        for(Map.Entry<String,String> entry:word2mean_cn.entrySet())
+        {
             TextView tv = new TextView(this);
             tv.setTextColor(Color.WHITE);
-            tv.setText(words[i]);
+            tv.setText(entry.getKey()+":  " +entry.getValue());
             layout.addView(tv);
         }
-
 
         AlertDialog.Builder builder = new AlertDialog.Builder(VideoActivity.this);
         //builder.setTitle("选择单词查询单词");

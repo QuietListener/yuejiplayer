@@ -95,8 +95,9 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 SQLiteDatabase.openOrCreateDatabase(dbf, null);
                 // 复制asseets中的数据库文件到DB_PATH下
-                copyDataBase();
-            } catch (IOException e) {
+                //copyDataBase();
+                copyBigDataBase();
+            } catch (Exception e) {
                 throw new Error("数据库创建失败");
             }
         }
@@ -124,26 +125,27 @@ public class DBHelper extends SQLiteOpenHelper {
      **/
     private void copyDataBase() throws IOException{
 
-        InputStream myInput = myContext.getResources().openRawResource(R.raw.words);
-        String outFileName = DB_PATH + DB_NAME;
-        OutputStream myOutput = new FileOutputStream(outFileName);
-        byte[] buffer = new byte[1024];
-        int length;
-        while ((length = myInput.read(buffer))>0){
-            myOutput.write(buffer, 0, length);
-        }
-        myOutput.flush();
-        myOutput.close();
-        myInput.close();
+//        InputStream myInput = myContext.getResources().openRawResource(R.raw.words);
+//        String outFileName = DB_PATH + DB_NAME;
+//        OutputStream myOutput = new FileOutputStream(outFileName);
+//        byte[] buffer = new byte[1024];
+//        int length;
+//        while ((length = myInput.read(buffer))>0){
+//            myOutput.write(buffer, 0, length);
+//        }
+//        myOutput.flush();
+//        myOutput.close();
+//        myInput.close();
     }
 
     //复制assets下的大数据库文件时用这个
-    private void copyBigDataBase() throws IOException{
+    private void copyBigDataBase() throws Exception{
         InputStream myInput;
         String outFileName = DB_PATH + DB_NAME;
         OutputStream myOutput = new FileOutputStream(outFileName);
         for (int i = ASSETS_SUFFIX_BEGIN; i < ASSETS_SUFFIX_END+1; i++) {
-            myInput = myContext.getAssets().open(ASSETS_NAME + "." + i);
+            int resource_id = R.raw.class.getField("words"+i).getInt(R.raw.class);
+            myInput = myContext.getResources().openRawResource(resource_id);
             byte[] buffer = new byte[1024];
             int length;
             while ((length = myInput.read(buffer))>0){

@@ -18,12 +18,15 @@ import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 
+import com.compdigitec.libvlcandroidsample.bean.Word;
+
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends Activity {
     public final static String TAG = "MainActivity";
@@ -113,32 +116,10 @@ public class MainActivity extends Activity {
         btn_test.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                SQLiteDatabase db = null;
+                List<Word> words = Dao.getInstance(MainActivity.this).findWords(new String [] {"goo'd"});
 
-
-                SQLiteDatabase db = MainActivity.this.helper.getWritableDatabase();
-
-
-                ContentValues cv = new ContentValues();
-                cv.put("word",new Date().getTime()+"");
-                cv.put("mean_cn", new Date().getTime()+"");
-                long ret = db.insert("word",null,cv);
-
-                db.close();
-                db = null;
-
-                db = MainActivity.this.helper.getReadableDatabase();
-                Cursor cursor = db.query("word",null,null,null,null,null,null);
-
-                String words = "";
-
-                //使用cursor.moveToNext()把游标下移一行。游标默认在第一行的上一行。
-                while (cursor.moveToNext()) {
-                    //使用GetString获取列中的值。参数为使用cursor.getColumnIndex("name")获取的序号。
-                    String word =cursor.getString(cursor.getColumnIndex("mean_cn"));
-                    words += (word+";");
-                }
-                db.close();
-                Toast.makeText(MainActivity.this, words,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, words.toString(),Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
