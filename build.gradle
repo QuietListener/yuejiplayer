@@ -39,6 +39,7 @@ android {
 }
 
 repositories {
+    jcenter()
     mavenCentral()
     maven {
         url  "https://dl.bintray.com/woxingxiao/maven/"
@@ -54,5 +55,6 @@ dependencies {
     // https://mvnrepository.com/artifact/de.mrmaffen/vlc-android-sdk
     compile group: 'de.mrmaffen', name: 'vlc-android-sdk', version: '2.0.6'
     compile 'com.xw.repo:bubbleseekbar:3.4-lite'
+    compile 'com.github.navasmdc:MaterialDesign:1.5@aar'
 
 }

@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.GestureDetectorCompat;
+import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -24,12 +26,15 @@ import android.view.SurfaceView;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
+import android.webkit.WebView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.compdigitec.libvlcandroidsample.bean.Record;
 import com.compdigitec.libvlcandroidsample.bean.Word;
 import com.xw.repo.BubbleSeekBar;
 
@@ -41,6 +46,7 @@ import org.videolan.libvlc.util.AndroidUtil;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -139,6 +145,23 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
             //Toast.makeText(VideoActivity.this,"onSingleTapConfirmed",Toast.LENGTH_SHORT).show();
             return false;
+        }
+    }
+
+
+    class AddWordListener implements View.OnClickListener {
+
+        private Word word;
+
+        public AddWordListener(Word word) {
+            this.word = word;
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            Record r = new Record(-1, word.getId(), word.getWord(), "move_name", "movie_name", new Date(), "path", 0);
+            Dao.getInstance(VideoActivity.this.getApplicationContext()).saveRecord(r);
         }
     }
 
@@ -244,13 +267,47 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.id_recordlayout);
         layout.setPadding(2, 2, 2, 2);
 
+
         for(Word w: wms)
         {
+
+            LinearLayout ll = new LinearLayout(this);
             TextView tv = new TextView(this);
+
             tv.setTextColor(Color.WHITE);
-            tv.setText(w.getWord()+" "+w.getAccent()+"  "+w.getMean_cn());
+            LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.MATCH_PARENT,
+                    0.2f
+            );
+            tv.setLayoutParams(param);
+
+            Button btn = new Button(this);
+            param = new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT,
+                    1.0f
+            );
+
+            btn.setLayoutParams(param);
+            btn.setText("+");
+            ll.addView(tv);
+            ll.addView(btn);
+
+            String mean = w.getMean_cn();
+            if(mean != null)
+                mean = mean.replaceAll("\r\n"," ");
+            String word_mean = "<font color='red'>"+w.getWord()+"</font> "
+                            +"<font color='green'>"+w.getAccent()+"</font>"
+                            + mean;
+            Spanned sp =  Html.fromHtml(word_mean);
+
+            tv.setText(sp);
             tv.setPadding(0,0,0,10);
-            layout.addView(tv);
+
+            layout.addView(ll);
+
+            btn.setOnClickListener(new AddWordListener(w));
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(VideoActivity.this);

@@ -17,6 +17,17 @@ public class Record {
     private String  subtitle;
     private int   status = 0;
 
+    public Record(int id, int word_id, String word, String movie_path, String movie_name, Date date, String subtitle, int status) {
+        this.id = id;
+        this.word_id = word_id;
+        this.word = word;
+        this.movie_path = movie_path;
+        this.movie_name = movie_name;
+        this.date = date;
+        this.subtitle = subtitle;
+        this.status = status;
+    }
+
     public int getId() {
         return id;
     }

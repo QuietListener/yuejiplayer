@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Date;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -108,7 +109,20 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase checkDB = null;
         String myPath = DB_PATH + DB_NAME;
         try{
-            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+//            private int id;
+//            private int word_id;
+//            private String word;
+//            private String movie_path;
+//            private String movie_name;
+//            private Date date;
+//            private String  subtitle;
+//            private int   status = 0;
+
+            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
+
+            String create_sql = "CREATE TABLE IF NOT EXISTS records ( _id INTEGER PRIMARY KEY NOT NULL, word_id integer, word varchar(255),movie_path text, movie_name varchar(255),date  datetime default current_timestamp ,subtitle text, status int(11))";
+            checkDB.execSQL(create_sql);
         }catch(SQLiteException e){
             //database does't exist yet.
             checkDB = null;
