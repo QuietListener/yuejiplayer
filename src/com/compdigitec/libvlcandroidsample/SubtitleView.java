@@ -32,9 +32,11 @@ import android.text.Html;
 public class SubtitleView extends TextView implements Runnable{
     private static final String TAG = "SubtitleView";
     private static final boolean DEBUG = false;
-    private static final int UPDATE_INTERVAL = 300;
+    private static final int UPDATE_INTERVAL = 100;
     private MediaPlayer player;
     private TreeMap<Long, Line> track;
+    private long pre_time = -1l;
+    private long cur_time = -1l;
 
     public SubtitleView(Context context) {
         super(context);
@@ -53,8 +55,14 @@ public class SubtitleView extends TextView implements Runnable{
     public void run() {
         if (player !=null && track!= null){
             int seconds = (int)(player.getTime() / 1000);
-            String text = getTimedText(player.getTime());
+            Line line = getTimedText(player.getTime());
+            if( line != null  && cur_time != line.from )
+            {
+                pre_time = cur_time;
+                cur_time = line.from;
+            }
 
+            String text = line ==null || line.text == null ? "" :line.text;
             Spanned sp =  Html.fromHtml(text);
 
             setText(sp);
@@ -62,11 +70,13 @@ public class SubtitleView extends TextView implements Runnable{
         postDelayed(this, UPDATE_INTERVAL);
     }
 
-    private String getTimedText(long currentPosition) {
-        String result = "";
+    private Line getTimedText(long currentPosition) {
+        Line result = null;
         for(Map.Entry<Long, Line> entry: track.entrySet()){
-            if (currentPosition < entry.getKey()) break;
-            if (currentPosition < entry.getValue().to) result = entry.getValue().text;
+            if (currentPosition < entry.getKey())
+                break;
+            if (currentPosition < entry.getValue().to)
+                result = entry.getValue();
         }
         return result;
     }
@@ -157,6 +167,14 @@ public class SubtitleView extends TextView implements Runnable{
 
     }
 
+    public long getPre_time() {
+        return pre_time;
+    }
+
+    public long getCur_time() {
+        return cur_time;
+    }
+
     private TreeMap<Long, Line> getSubtitleFile(String path) {
         InputStream inputStream = null;
         try {
@@ -188,4 +206,7 @@ public class SubtitleView extends TextView implements Runnable{
             this.text = text;
         }
     }
+
+
+
 }

@@ -40,15 +40,19 @@ android {
 
 repositories {
     mavenCentral()
+    maven {
+        url  "https://dl.bintray.com/woxingxiao/maven/"
+    }
     flatDir {
         dirs '.'
     }
 }
 
 dependencies {
-    compile 'com.android.support:support-v4:21.0.3'
+    compile 'com.android.support:appcompat-v7:21.0.3'
     //compile(name:'libvlc', ext:'aar')
     // https://mvnrepository.com/artifact/de.mrmaffen/vlc-android-sdk
     compile group: 'de.mrmaffen', name: 'vlc-android-sdk', version: '2.0.6'
+    compile 'com.xw.repo:bubbleseekbar:3.4-lite'
 
 }

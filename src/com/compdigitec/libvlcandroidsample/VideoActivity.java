@@ -30,6 +30,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.compdigitec.libvlcandroidsample.bean.Word;
+import com.xw.repo.BubbleSeekBar;
+
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
@@ -73,6 +76,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     private GestureDetectorCompat mDetector;
 
+    private AlertDialog alertDialog;
+
     DBHelper helper = null;
 
     public MediaPlayer getMediaPlayer()
@@ -94,7 +99,13 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             {
                 Toast.makeText(VideoActivity.this, "向左滑动", Toast.LENGTH_SHORT).show();
                 long time = mMediaPlayer.getTime();
-                time = time - 5000;
+                if(mSubtitleView.getPre_time() <= 0l)
+                    time = time - 5000;
+                else
+                {
+                    time = mSubtitleView.getPre_time()-50;
+                }
+
                 mMediaPlayer.setTime(time);
             }
             else if((e2.getX()-e1.getX())>FLING_MIN_DISTANCE && Math.abs(velocityX)>FLING_MIN_VELOCITY)
@@ -104,8 +115,30 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 time = time + 5000;
                 mMediaPlayer.setTime(time);
             }
+
+            mMediaPlayer.play();
             return false;
 
+        }
+
+        public boolean onSingleTapConfirmed(MotionEvent e) {
+
+            if(alertDialog == null || !alertDialog.isShowing())
+            {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                } else {
+                    mMediaPlayer.play();
+                }
+            }
+
+            if(! seek_bar.isShown())
+            {
+                seek_bar.setVisibility(mSubtitleView.VISIBLE);
+            }
+
+            //Toast.makeText(VideoActivity.this,"onSingleTapConfirmed",Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -164,8 +197,9 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 String text = ((TextView)view).getText().toString();
-                Toast.makeText(VideoActivity.this, text, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(VideoActivity.this, text, Toast.LENGTH_SHORT).show();
                 dialog(text);
+                mMediaPlayer.pause();
                 return false;
             }
         });
@@ -173,30 +207,14 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     }
 
-    private  Map<String,String> queryDB(List<String> words)
+    private  List<Word> queryDB(List<String> words)
     {
-        SQLiteDatabase db = null;
-        Map<String,String> ret = new TreeMap<>();
-        try {
-            db = this.helper.getReadableDatabase();
-            for (String word : words) {
-                Cursor cursor = db.query("words",null,"word='good'",null,null,null,null);
-                //使用cursor.moveToNext()把游标下移一行。游标默认在第一行的上一行。
-                while (cursor.moveToNext()) {
-                    //使用GetString获取列中的值。参数为使用cursor.getColumnIndex("name")获取的序号。
-                    String mean_cn = cursor.getString(cursor.getColumnIndex("mean_cn"));
-                    ret.put(word,mean_cn);
-                    break;
-                }
-            }
-        }
-        finally
-        {
-            if(db!=null)
-                db.close();
-        }
-
-        return ret;
+        List<Word> ws = new ArrayList<Word>();
+        if(words.size() == 0)
+            return ws;
+        String [] w = new String[words.size()];
+        ws=Dao.getInstance(this.getApplicationContext()).findWords(words.toArray(w));
+        return ws;
     }
 
     protected void dialog(String text) {
@@ -207,30 +225,31 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             words = text.split(" ");
         }
 
-        Pattern p = Pattern.compile("[a-zA-Z|-]+-*[a-zA-Z|-]+");
-        List<String> words_ = new ArrayList<>();
+        Pattern p = Pattern.compile("[a-zA-Z|-|']+");
+        List<String> words_ = new ArrayList<String>();
         for (int i = 0; i < words.length; i++)
         {
             String name = words[i];
-            name = name.replaceAll("[\'|\\.|\"]", "").trim();
-            if (name.length() <= 2 || !p.matcher(name).matches())
+            name = name.replaceAll("[\\.|\"]", "").trim();
+            if (name.length() <= 2 )
                 continue;
 
             words_.add(name);
         }
 
-        Map<String,String> word2mean_cn = queryDB(words_);
+        List<Word> wms = queryDB(words_);
 
         LayoutInflater mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = mInflater.inflate(R.layout.alert_dialog, null);
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.id_recordlayout);
         layout.setPadding(2, 2, 2, 2);
 
-        for(Map.Entry<String,String> entry:word2mean_cn.entrySet())
+        for(Word w: wms)
         {
             TextView tv = new TextView(this);
             tv.setTextColor(Color.WHITE);
-            tv.setText(entry.getKey()+":  " +entry.getValue());
+            tv.setText(w.getWord()+" "+w.getAccent()+"  "+w.getMean_cn());
+            tv.setPadding(0,0,0,10);
             layout.addView(tv);
         }
 
@@ -244,7 +263,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 //           dialog.dismiss();
 //          }
 //         });
-        builder.create().show();
+        alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -420,6 +440,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     }
     private  class MyPlayerListener implements MediaPlayer.EventListener {
         private WeakReference<VideoActivity> mOwner;
+        private int progress_show_count = 0;
+        int SeekBarShowTime = 5;
 
         public MyPlayerListener(VideoActivity owner) {
             mOwner = new WeakReference<VideoActivity>(owner);
@@ -437,9 +459,9 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 case MediaPlayer.Event.Playing:
 
 
-                      player.mMediaPlayer.setSpuTrack(-1);
-//                    MediaPlayer.TrackDescription[] tds = player.mMediaPlayer.getSpuTracks();
-//
+                    player.mMediaPlayer.setSpuTrack(-1);
+                    MediaPlayer.TrackDescription[] tds = player.mMediaPlayer.getSpuTracks();
+
 //                    Media.Slave slave = new Media.Slave(Media.Slave.Type.Subtitle,4,player.srtFilePath+".jpg");
 //                    player.mMediaPlayer.getMedia().addSlave(slave);
 //
@@ -471,19 +493,31 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                             if(b == true)
                             {
                                 player.mMediaPlayer.setTime(i*1000);
+                                progress_show_count = 0;
+                            }
+                            else
+                            {
+                                progress_show_count += 1;
+                            }
+
+                            if(progress_show_count > SeekBarShowTime)
+                            {
+                                seek_bar.setVisibility(View.INVISIBLE);
+                                progress_show_count = 0;
                             }
                         }
 
                         @Override
                         public void onStartTrackingTouch(SeekBar seekBar) {
-
+                            progress_show_count = 0;
                         }
 
                         @Override
                         public void onStopTrackingTouch(SeekBar seekBar) {
-
+                            progress_show_count = 0;
                         }
                     });
+
 
                     Log.d(TAG,"");
                     break;
@@ -493,9 +527,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 case MediaPlayer.Event.TimeChanged:
                     Log.d(TAG, "+++time---"+player.mMediaPlayer.getTime());
                     long time  = player.mMediaPlayer.getTime();
-                    int total_time = player.seek_bar.getMax();
-                    int progress = (int)(time/1000);
-                    player.seek_bar.setProgress(progress);
+                    player.seek_bar.setProgress((int)(time/1000));
 
 
                     MediaPlayer.TrackDescription[] tracks = player.mMediaPlayer.getSpuTracks();

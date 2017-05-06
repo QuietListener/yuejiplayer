@@ -2,14 +2,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:baselineAligned="false"
     android:orientation="vertical"
-    tools:context=".SampleActivity" >
+    tools:context=".SampleActivity">
 
     <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center">
+
+        android:layout_gravity="center_vertical|center">
 
         <SurfaceView
             android:id="@+id/surface"
@@ -27,7 +29,7 @@
             />
 
         <!--<SurfaceView-->
-            <!--android:id="@+id/subtitle_view1"-->
+            <!--android:ixd="@+id/subtitle_view1"-->
             <!--android:layout_gravity="center"-->
             <!--android:layout_width="wrap_content"-->
             <!--android:layout_height="wrap_content" />-->
@@ -37,7 +39,21 @@
             android:id="@+id/seek_bar"
             android:layout_gravity="top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@android:style/Widget.DeviceDefault.SeekBar"
+            />
+
+        <!--<com.xw.repo.BubbleSeekBar-->
+            <!--android:id="@+id/seek_bar"-->
+            <!--android:layout_gravity="top"-->
+            <!--android:layout_height="1dp"-->
+            <!--android:layout_width="match_parent"-->
+
+            <!--android:layout_marginTop="6dp"-->
+            <!--app:bsb_progress="0"-->
+            <!--app:bsb_second_track_color="@color/color_green"-->
+            <!--app:bsb_show_section_mark="true"-->
+            <!--app:bsb_track_color="@color/color_gray"/>-->
 
     </FrameLayout>
 

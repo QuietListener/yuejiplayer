@@ -48,7 +48,7 @@ public class DBHelper extends SQLiteOpenHelper {
     //第一个文件名后缀
     private static final int ASSETS_SUFFIX_BEGIN    = 101;
     //最后一个文件名后缀
-    private static final int ASSETS_SUFFIX_END        = 103;
+    private static final int ASSETS_SUFFIX_END        = 102;
 
     /**
      * 在SQLiteOpenHelper的子类当中，必须有该构造函数
