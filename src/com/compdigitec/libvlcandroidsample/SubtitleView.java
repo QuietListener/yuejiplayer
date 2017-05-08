@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +44,9 @@ public class SubtitleView extends TextView implements Runnable{
     private TreeMap<Long, Line> track;
     private long pre_time = -1l;
     private long cur_time = -1l;
+    private long next_time = 0l;
     private boolean onlyShowEn = true;
+    private int subIndex = 0;
 
     private static final String seperator = "<br\\s*>|<br\\s*/>|\r\n|\r|\n";
 
@@ -120,13 +123,45 @@ public class SubtitleView extends TextView implements Runnable{
 
     private Line getTimedText(long currentPosition) {
         Line result = null;
-        for(Map.Entry<Long, Line> entry: track.entrySet()){
+
+        subIndex = 0;
+        for(Map.Entry<Long, Line> entry: track.entrySet())
+        {
+
             if (currentPosition < entry.getKey())
                 break;
             if (currentPosition < entry.getValue().to)
                 result = entry.getValue();
+
+            subIndex+=1;
         }
         return result;
+    }
+
+
+    private Line getPreTimedText(long currentPosition) {
+
+        List<Line> ls = new ArrayList<>(this.track.values());
+        if(this.subIndex>1 && this.subIndex <= ls.size())
+        {
+            this.subIndex-=1;
+            return ls.get(this.subIndex);
+        }
+
+        return null;
+    }
+
+
+    private Line getNextTimedText(long currentPosition) {
+
+        List<Line> ls = new ArrayList<>(this.track.values());
+        if(this.subIndex>=0 && this.subIndex < ls.size()-1)
+        {
+            this.subIndex+=1;
+            return ls.get(this.subIndex);
+        }
+
+        return null;
     }
 
     // To display the seconds in the duration format 00:00:00
@@ -155,6 +190,7 @@ public class SubtitleView extends TextView implements Runnable{
     private void init()
     {
         this.setBackgroundColor(Color.GRAY);
+        this.getBackground().setAlpha(50);
     }
     public void setSubSource(String path, String mime){
         init();
@@ -228,7 +264,15 @@ public class SubtitleView extends TextView implements Runnable{
     }
 
     public long getPre_time() {
+        Line line = this.getPreTimedText(this.player.getTime());
+        pre_time = line == null ? 0l : line.from;
         return pre_time;
+    }
+
+    public long getNext_time() {
+        Line line = this.getNextTimedText(this.player.getTime());
+        next_time = line == null ? player.getMedia().getDuration() : line.from;
+        return next_time;
     }
 
     public long getCur_time() {

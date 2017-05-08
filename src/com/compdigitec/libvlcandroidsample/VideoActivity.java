@@ -103,22 +103,22 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
             if((e1.getX()-e2.getX())>FLING_MIN_DISTANCE && Math.abs(velocityX)>FLING_MIN_VELOCITY)
             {
-                Toast.makeText(VideoActivity.this, "向左滑动", Toast.LENGTH_SHORT).show();
+                Toast.makeText(VideoActivity.this, "左滑:上一字幕", Toast.LENGTH_SHORT).show();
                 long time = mMediaPlayer.getTime();
                 if(mSubtitleView.getPre_time() <= 0l)
                     time = time - 5000;
                 else
                 {
-                    time = mSubtitleView.getPre_time()-50;
+                    time = mSubtitleView.getPre_time()-10;
                 }
 
                 mMediaPlayer.setTime(time);
             }
             else if((e2.getX()-e1.getX())>FLING_MIN_DISTANCE && Math.abs(velocityX)>FLING_MIN_VELOCITY)
             {
-                Toast.makeText(VideoActivity.this, "向右滑动", Toast.LENGTH_SHORT).show();
-                long time = mMediaPlayer.getTime();
-                time = time + 5000;
+                Toast.makeText(VideoActivity.this, "右滑:下一字幕", Toast.LENGTH_SHORT).show();
+                Long time = mSubtitleView.getNext_time()+10;
+                //time = time + 5000;
                 mMediaPlayer.setTime(time);
             }
 
