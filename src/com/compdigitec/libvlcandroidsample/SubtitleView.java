@@ -1,6 +1,7 @@
 package com.compdigitec.libvlcandroidsample;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.Spanned;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,12 +18,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 import java.io.File;
+import java.util.regex.Pattern;
+
 import org.videolan.libvlc.MediaPlayer;
 import android.text.Html;
 
@@ -37,6 +43,9 @@ public class SubtitleView extends TextView implements Runnable{
     private TreeMap<Long, Line> track;
     private long pre_time = -1l;
     private long cur_time = -1l;
+    private boolean onlyShowEn = true;
+
+    private static final String seperator = "<br\\s*>|<br\\s*/>|\r\n|\r|\n";
 
     public SubtitleView(Context context) {
         super(context);
@@ -51,8 +60,8 @@ public class SubtitleView extends TextView implements Runnable{
     }
 
 
-    @Override
-    public void run() {
+    private void updateText()
+    {
         if (player !=null && track!= null){
             int seconds = (int)(player.getTime() / 1000);
             Line line = getTimedText(player.getTime());
@@ -63,11 +72,50 @@ public class SubtitleView extends TextView implements Runnable{
             }
 
             String text = line ==null || line.text == null ? "" :line.text;
-            Spanned sp =  Html.fromHtml(text);
 
-            setText(sp);
+            if(onlyShowEn == true)
+            {
+                String[] texts = text.split(seperator);
+
+                for (String s : texts) {
+                    Spanned sp = Html.fromHtml(s);
+                    String content = sp.toString().trim();
+                    if (isEn(content)) {
+                        setText(sp);
+                    }
+                }
+            }
+            else {
+                Spanned sp = Html.fromHtml(text);
+                setText(sp);
+            }
         }
+    }
+
+
+    @Override
+    public void run() {
+
+        updateText();
         postDelayed(this, UPDATE_INTERVAL);
+    }
+
+    private boolean isEn(String text)
+    {
+        if(text == null)
+            return true;
+
+        String [] s1 = text.replaceAll("\\s+","").split("[0-9]|[a-zA-Z]|'|,|;|\\.|!|，|。|-");
+        Set ss = new HashSet<String>(Arrays.asList(s1));
+
+        int length = text.length();
+        int size = ss.size();
+
+        if( (float)(length-size)/length > 0.9)
+        {
+            return true;
+        }
+        return false;
     }
 
     private Line getTimedText(long currentPosition) {
@@ -102,8 +150,15 @@ public class SubtitleView extends TextView implements Runnable{
         this.player = player;
     }
 
+
+
+    private void init()
+    {
+        this.setBackgroundColor(Color.GRAY);
+    }
     public void setSubSource(String path, String mime){
-            track = getSubtitleFile(path);
+        init();
+        track = getSubtitleFile(path);
     }
 
     /////////////Utility Methods:
@@ -157,6 +212,11 @@ public class SubtitleView extends TextView implements Runnable{
         return track;
     }
 
+    public void setOnlyShowEn(boolean onlyShowEn) {
+        this.onlyShowEn = onlyShowEn;
+        updateText();
+    }
+
     private static long parse(String in) {
         long hours = Long.parseLong(in.split(":")[0].trim());
         long minutes = Long.parseLong(in.split(":")[1].trim());
@@ -206,6 +266,7 @@ public class SubtitleView extends TextView implements Runnable{
             this.text = text;
         }
     }
+
 
 
 

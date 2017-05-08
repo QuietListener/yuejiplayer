@@ -133,8 +133,10 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             {
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();
+                    mSubtitleView.setOnlyShowEn(false);
                 } else {
                     mMediaPlayer.play();
+                    mSubtitleView.setOnlyShowEn(true);
                 }
             }
 
