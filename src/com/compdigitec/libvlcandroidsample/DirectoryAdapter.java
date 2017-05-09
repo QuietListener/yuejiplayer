@@ -28,7 +28,6 @@ public class DirectoryAdapter extends BaseAdapter {
         mAudio = true;
         curDir = Environment.getExternalStorageDirectory();
         preDir = curDir;
-
         refresh();
     }
 

@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
     DBHelper helper=null;
 
     boolean mPlayingVideo = false; // Don't destroy libVLC if the video activity is playing.
+    public static final int FILE_SELECT_CODE = 1234321;
 
     View.OnClickListener mSimpleListener = new View.OnClickListener() {
         @Override
@@ -121,6 +122,31 @@ public class MainActivity extends Activity {
 //
 //        Button load_a_mp3 = (Button) findViewById(R.id.load_a_mp3);
 //        load_a_mp3.setOnClickListener(mSimpleListener);
+
+
+
+//        Button button = (Button) findViewById(R.id.main_btn);
+//        button.setOnClickListener(new View.OnClickListener() {
+//
+//            private void showFileChooser() {
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.setType("*/*");
+//                intent.addCategory(Intent.CATEGORY_OPENABLE);
+//
+//                try {
+//                    MainActivity.this.startActivityForResult( Intent.createChooser(intent, "选择视频所在的文件夹"), FILE_SELECT_CODE);
+//                } catch (android.content.ActivityNotFoundException ex) {
+//                    Toast.makeText(MainActivity.this, "请安装一个文件选择器.",  Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//
+//            @Override
+//            public void onClick(View view) {
+//               showFileChooser();
+//            }
+//        });
+
         final ListView mediaView = (ListView) findViewById(R.id.mediaView);
         mediaView.setAdapter(mAdapter);
         mediaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -181,6 +207,22 @@ public class MainActivity extends Activity {
 //            }
 //        });
     }
+
+//
+//
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data)  {
+//        switch (requestCode)
+//        {
+//            case FILE_SELECT_CODE:
+//                if (resultCode == RESULT_OK)
+//                {
+//                    Uri uri = data.getData();
+//                    Toast.makeText(this,"file:"+uri,Toast.LENGTH_SHORT);
+//                }
+//                break;
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
 
     @Override
     public void onResume() {

@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -294,7 +295,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             btn.setLayoutParams(param);
             btn.setText("+");
             ll.addView(tv);
-            ll.addView(btn);
+            //先不加button
+            //ll.addView(btn);
 
             String mean = w.getMean_cn();
             if(mean != null)
@@ -334,8 +336,16 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     @Override
     protected void onResume() {
-        super.onResume();
 
+        /**
+         * 设置为横屏
+         */
+        if(getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+        {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+        super.onResume();
     }
 
     @Override
