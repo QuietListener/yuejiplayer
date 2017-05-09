@@ -5,8 +5,10 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,8 +25,10 @@ import com.compdigitec.libvlcandroidsample.bean.Word;
 import org.videolan.libvlc.LibVLC;
 import org.videolan.libvlc.Media;
 import org.videolan.libvlc.MediaPlayer;
+import org.videolan.libvlc.util.Extensions;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -112,52 +116,70 @@ public class MainActivity extends Activity {
 
         // Set up the UI elements.
         mAdapter = new DirectoryAdapter();
-        Button btn_test = (Button)findViewById(R.id.main_btn);
-        btn_test.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                SQLiteDatabase db = null;
-                List<Word> words = Dao.getInstance(MainActivity.this).findWords(new String [] {"goo'd"});
-
-                Toast.makeText(MainActivity.this, words.toString(),Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-
-        Button load_a_mp3 = (Button) findViewById(R.id.load_a_mp3);
-        load_a_mp3.setOnClickListener(mSimpleListener);
+//        Button btn_test = (Button)findViewById(R.id.main_btn);
+//
+//
+//        Button load_a_mp3 = (Button) findViewById(R.id.load_a_mp3);
+//        load_a_mp3.setOnClickListener(mSimpleListener);
         final ListView mediaView = (ListView) findViewById(R.id.mediaView);
         mediaView.setAdapter(mAdapter);
         mediaView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> arg0, View arg1,
-                    int position, long arg3) {
-                if (mAdapter.isAudioMode()) {
-                    playMediaAtPath((String) mAdapter.getItem(position));
-                } else {
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
+
+                //返回上一级
+                if(position == 0)
+                {
+                    mAdapter.goUp();
+                    return;
+                }
+
+                File f = (File)mAdapter.getItem(position);
+                String file_path = f.getAbsolutePath();
+
+                if(f.isDirectory())
+                {
+                    mAdapter.goTo(f);
+                    return;
+                }
+//              if (mAdapter.isAudioMode()) {
+//                    playMediaAtPath((String) mAdapter.getItem(position));
+//              }
+
+                String ext = Utils.fileExt(file_path);
+
+                if(ext == null)
+                    return;
+
+                if(Extensions.VIDEO.contains(ext))
+                {
                     Intent intent = new Intent(MainActivity.this, VideoActivity.class);
-                    intent.putExtra(VideoActivity.LOCATION, (String) mAdapter.getItem(position));
+                    intent.putExtra(VideoActivity.LOCATION, file_path);
                     mPlayingVideo = true;
                     startActivity(intent);
                 }
+                else
+                {
+                    Toast.makeText(MainActivity.this, "请选择视频文件，字幕与视频同名喔~" ,Toast.LENGTH_SHORT).show();
+                }
             }
         });
-        RadioButton radioAudio = (RadioButton)findViewById(R.id.radioAudio);
-        radioAudio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.setAudioMode(true);
-                mAdapter.refresh();
-            }
-        });
-        RadioButton radioVideo = (RadioButton)findViewById(R.id.radioVideo);
-        radioVideo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.setAudioMode(false);
-                mAdapter.refresh();
-            }
-        });
+//        RadioButton radioAudio = (RadioButton)findViewById(R.id.radioAudio);
+//        radioAudio.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mAdapter.setAudioMode(true);
+//                mAdapter.refresh();
+//            }
+//        });
+//        RadioButton radioVideo = (RadioButton)findViewById(R.id.radioVideo);
+//        radioVideo.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mAdapter.setAudioMode(false);
+//                mAdapter.refresh();
+//            }
+//        });
     }
 
     @Override

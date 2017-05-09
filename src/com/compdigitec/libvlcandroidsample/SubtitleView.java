@@ -157,7 +157,7 @@ public class SubtitleView extends TextView implements Runnable{
         List<Line> ls = new ArrayList<>(this.track.values());
         if(this.subIndex>=0 && this.subIndex < ls.size()-1)
         {
-            this.subIndex+=1;
+            //this.subIndex+=1;
             return ls.get(this.subIndex);
         }
 

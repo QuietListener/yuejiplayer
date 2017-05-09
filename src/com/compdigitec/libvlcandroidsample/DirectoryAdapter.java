@@ -17,15 +17,21 @@ import java.util.ArrayList;
  * List adapter used to drive the ListView in the activity.
  */
 public class DirectoryAdapter extends BaseAdapter {
-    public final static String TAG = "LibVLCAndroidSample/DirectoryAdapter";
+    public final static String TAG = "/DirectoryAdapter";
+    private File curDir = null;
+    private File preDir = null;
 
-    private ArrayList<String> mFiles = new ArrayList<String>();
+    private ArrayList<File> mFiles = new ArrayList<>();
     private boolean mAudio;
 
     public DirectoryAdapter() {
         mAudio = true;
+        curDir = Environment.getExternalStorageDirectory();
+        preDir = curDir;
+
         refresh();
     }
+
 
     public boolean isAudioMode() {
         return mAudio;
@@ -35,22 +41,61 @@ public class DirectoryAdapter extends BaseAdapter {
         mAudio = b;
     }
 
-    public void refresh() {
+    public void refresh()
+    {
+        if(this.curDir != null)
+            refresh(this.curDir);
+    }
+
+
+    public void goUp()
+    {
+        File pre = this.preDir.getParentFile();
+        File cur = this.curDir.getParentFile();
+
+        if(pre == null )
+            pre = cur;
+        if(cur == null)
+            return;
+
+        this.preDir = pre;
+        this.curDir = cur;
+        refresh();
+    }
+
+    public void goTo(File f)
+    {
+        if(f!= null && f.isDirectory())
+        {
+            this.preDir = f.getParentFile();
+            this.curDir = f;
+            refresh();
+        }
+    }
+
+    public void refresh(File dir) {
         Log.d(TAG, "Refreshing adapter in " + (mAudio ? "audio mode" : "video mode"));
-        File[] files = Environment.getExternalStorageDirectory().listFiles();
+        File[] files = dir.listFiles();
+
         mFiles.clear();
-        for(File f : files) {
-            // Filter using libVLC's 'supported audio formats' filter.
-            if(f.getName().contains(".")) {
-                int i = f.getName().lastIndexOf(".");
-                if (i > 0) {
-                    if ((mAudio && Extensions.AUDIO.contains(f.getName()
-                            .substring(i)))
-                            || (!mAudio && Extensions.VIDEO.contains(f
-                                    .getName().substring(i)))) {
-                        mFiles.add(f.getName());
-                    }
+        mFiles.add(preDir);
+
+        if(files != null)
+        {
+            for (File f : files) {
+                // Filter using libVLC's 'supported audio formats' filter.
+                if (f.isDirectory()) {
+                    mFiles.add(f);
+                    continue;
                 }
+
+
+                String ext = Utils.fileExt(f.getAbsolutePath());
+                if (ext == null)
+                    continue;
+
+                if (Extensions.VIDEO.contains(ext) || Extensions.SUBTITLES.contains(ext))
+                    mFiles.add(f);
             }
         }
         this.notifyDataSetChanged();
@@ -63,7 +108,7 @@ public class DirectoryAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return Environment.getExternalStorageDirectory().getAbsolutePath() + '/' + mFiles.get(position);
+        return mFiles.get(position);
     }
 
     @Override
@@ -79,10 +124,28 @@ public class DirectoryAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View v, ViewGroup parent) {
-        if(v == null) {
+        if(v == null)
+        {
             v = new TextView(parent.getContext());
         }
-        ((TextView)v).setText(mFiles.get(position));
+
+        File f = mFiles.get(position);
+        if(f == null)
+            return null;
+
+        String text = f.getName();
+        if(f.getAbsolutePath().equals(this.preDir.getAbsolutePath()))
+        {
+            text = "返回上一级";
+        }
+
+        if(f.isDirectory())
+        {
+            text = "/"+text;
+        }
+
+        ((TextView)v).setText(text);
+        ((TextView)v).setPadding(0,6,0,0);
 
         return v;
     }
