@@ -49,12 +49,11 @@ public class SubtitleView extends TextView implements Runnable{
     private int subIndex = 0;
 
     private static final String seperator = "<br\\s*>|<br\\s*/>|\r\n|\r|\n";
+    private static final String seperatorEnd = "(<br\\s*>|<br\\s*/>|\r\n|\r|\n)$";
 
     public SubtitleView(Context context) {
         super(context);
     }
-
-
     public SubtitleView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -74,7 +73,7 @@ public class SubtitleView extends TextView implements Runnable{
                 cur_time = line.from;
             }
 
-            String text = line ==null || line.text == null ? "" :line.text;
+            String text = line ==null || line.text == null ? "" :line.text.trim().replaceAll(seperatorEnd,"");
 
             if(onlyShowEn == true)
             {
@@ -177,21 +176,22 @@ public class SubtitleView extends TextView implements Runnable{
     }
 
     @Override
-    protected void onDetachedFromWindow() {
+    protected void onDetachedFromWindow()
+    {
         super.onDetachedFromWindow();
         removeCallbacks(this);
     }
+
     public void setPlayer(MediaPlayer player) {
         this.player = player;
     }
 
-
-
     private void init()
     {
-        this.setBackgroundColor(Color.GRAY);
-        this.getBackground().setAlpha(50);
+        this.setBackgroundColor(Color.BLACK);
+        this.getBackground().setAlpha(110);
     }
+
     public void setSubSource(String path, String mime){
         init();
         track = getSubtitleFile(path);
@@ -310,8 +310,4 @@ public class SubtitleView extends TextView implements Runnable{
             this.text = text;
         }
     }
-
-
-
-
 }

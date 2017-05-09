@@ -26,6 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:gravity="center_horizontal"
+            android:textSize="22sp"
             />
 
         <!--<SurfaceView-->

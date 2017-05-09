@@ -263,6 +263,9 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             words_.add(name);
         }
 
+        if(words_.size() == 0)
+            return;
+
         List<Word> wms = queryDB(words_);
 
         LayoutInflater mInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
