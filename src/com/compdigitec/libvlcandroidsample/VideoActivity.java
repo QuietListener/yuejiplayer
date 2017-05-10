@@ -256,7 +256,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         for (int i = 0; i < words.length; i++)
         {
             String name = words[i];
-            name = name.replaceAll("[\\.|\"]", "").trim();
+            name = name.replaceAll("[\\.|\"|！|!|:|;|。|\\(|\\)]", "").trim().toLowerCase();
             if (name.length() <= 2 )
                 continue;
 
