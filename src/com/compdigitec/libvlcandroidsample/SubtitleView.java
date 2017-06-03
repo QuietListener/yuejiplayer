@@ -62,11 +62,20 @@ public class SubtitleView extends TextView implements Runnable{
     }
 
 
+    public Line getTimedText(){
+        Line line = null;
+        if(player!=null)
+        {
+            line = getTimedText(player.getTime());
+        }
+        return line;
+    }
+
     private void updateText()
     {
         if (player !=null && track!= null){
             int seconds = (int)(player.getTime() / 1000);
-            Line line = getTimedText(player.getTime());
+            Line line = getTimedText();
             if( line != null  && cur_time != line.from )
             {
                 pre_time = cur_time;
@@ -307,6 +316,30 @@ public class SubtitleView extends TextView implements Runnable{
         public Line(long from, long to, String text) {
             this.from = from;
             this.to = to;
+            this.text = text;
+        }
+
+        public long getFrom() {
+            return from;
+        }
+
+        public void setFrom(long from) {
+            this.from = from;
+        }
+
+        public long getTo() {
+            return to;
+        }
+
+        public void setTo(long to) {
+            this.to = to;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
             this.text = text;
         }
     }

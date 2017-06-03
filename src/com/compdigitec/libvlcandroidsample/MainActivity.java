@@ -125,7 +125,16 @@ public class MainActivity extends Activity {
 
 
 
-//        Button button = (Button) findViewById(R.id.main_btn);
+        Button button = (Button) findViewById(R.id.main_btn);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent intent = new Intent(MainActivity.this, ReviewActivity.class);
+                startActivity(intent);
+            }
+        });
+
 //        button.setOnClickListener(new View.OnClickListener() {
 //
 //            private void showFileChooser() {
@@ -180,6 +189,7 @@ public class MainActivity extends Activity {
                 if(Extensions.VIDEO.contains(ext))
                 {
                     Intent intent = new Intent(MainActivity.this, VideoActivity.class);
+                    intent.setData(Uri.fromFile(new File(file_path)));
                     intent.putExtra(VideoActivity.LOCATION, file_path);
                     mPlayingVideo = true;
                     startActivity(intent);

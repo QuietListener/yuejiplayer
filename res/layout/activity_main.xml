@@ -17,11 +17,11 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <!--<Button-->
-        <!--android:id="@+id/main_btn"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="test"/>-->
+    <Button
+        android:id="@+id/main_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="test"/>
 
     <ListView
         android:id="@+id/mediaView"

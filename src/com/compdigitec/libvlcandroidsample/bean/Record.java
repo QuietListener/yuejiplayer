@@ -16,8 +16,10 @@ public class Record {
     private Date   date;
     private String  subtitle;
     private int   status = 0;
+    private long time_from = 0l;
+    private long time_to = 0l;
 
-    public Record(int id, int word_id, String word, String movie_path, String movie_name, Date date, String subtitle, int status) {
+    public Record(int id, int word_id, String word, String movie_path, String movie_name, Date date, String subtitle, long from, long to , int status) {
         this.id = id;
         this.word_id = word_id;
         this.word = word;
@@ -27,6 +29,7 @@ public class Record {
         this.subtitle = subtitle;
         this.status = status;
     }
+
 
     public int getId() {
         return id;
@@ -90,5 +93,21 @@ public class Record {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public long getTime_from() {
+        return time_from;
+    }
+
+    public void setTime_from(long time_from) {
+        this.time_from = time_from;
+    }
+
+    public long getTime_to() {
+        return time_to;
+    }
+
+    public void setTime_to(long time_to) {
+        this.time_to = time_to;
     }
 }

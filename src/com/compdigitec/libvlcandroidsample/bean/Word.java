@@ -10,13 +10,15 @@ public class Word {
     private String mean_cn;
     private String accent;
     private String audio_file;
+    private String word_variants;
 
-    public Word(int id, String word, String mean_cn, String accent, String audio_file) {
+    public Word(int id, String word, String mean_cn, String accent, String audio_file,String word_variants) {
         this.id = id;
         this.word = word;
         this.mean_cn = mean_cn;
         this.accent = accent;
         this.audio_file = audio_file;
+        this.word_variants = word_variants;
     }
 
     public int getId() {
@@ -57,6 +59,14 @@ public class Word {
 
     public void setAudio_file(String audio_file) {
         this.audio_file = audio_file;
+    }
+
+    public String getWord_variants() {
+        return word_variants;
+    }
+
+    public void setWord_variants(String word_variants) {
+        this.word_variants = word_variants;
     }
 
     @Override

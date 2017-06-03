@@ -121,7 +121,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READWRITE);
 
-            String create_sql = "CREATE TABLE IF NOT EXISTS records ( _id INTEGER PRIMARY KEY NOT NULL, word_id integer, word varchar(255),movie_path text, movie_name varchar(255),date  datetime default current_timestamp ,subtitle text, status int(11))";
+            String create_sql = "CREATE TABLE IF NOT EXISTS records ( _id INTEGER PRIMARY KEY NOT NULL, word_id integer, word varchar(255),movie_path text, movie_name varchar(255),date  datetime default current_timestamp ,subtitle text, time_from int(11), time_to int(11), status int(11))";
             checkDB.execSQL(create_sql);
         }catch(SQLiteException e){
             //database does't exist yet.

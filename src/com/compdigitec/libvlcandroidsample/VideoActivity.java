@@ -37,7 +37,7 @@ import android.widget.Toast;
 
 import com.compdigitec.libvlcandroidsample.bean.Record;
 import com.compdigitec.libvlcandroidsample.bean.Word;
-import com.xw.repo.BubbleSeekBar;
+//import com.xw.repo.BubbleSeekBar;
 
 import org.videolan.libvlc.IVLCVout;
 import org.videolan.libvlc.LibVLC;
@@ -155,15 +155,22 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     class AddWordListener implements View.OnClickListener {
 
         private Word word;
+        private String mpath;
+        SubtitleView.Line line;
 
-        public AddWordListener(Word word) {
+        public AddWordListener(Word word, String mpath, SubtitleView.Line line) {
             this.word = word;
+            this.mpath = mpath;
+            this.line = line;
         }
 
         @Override
         public void onClick(View view) {
+            File f = new File(this.mpath);
+            String mname = f.getName();
 
-            Record r = new Record(-1, word.getId(), word.getWord(), "move_name", "movie_name", new Date(), "path", 0);
+            String text = line.getText();
+            Record r = new Record(-1, word.getId(), word.getWord(),  this.mpath, mname, new Date(), text, line.getFrom(), line.getTo(), 0);
             Dao.getInstance(VideoActivity.this.getApplicationContext()).saveRecord(r);
         }
     }
@@ -187,7 +194,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         // Receive path to play from intent
         Intent intent = getIntent();
-        mFilePath = intent.getExtras().getString(LOCATION);
+        mFilePath = intent.getData().getPath();
+        //mFilePath = intent.getExtras().getString(LOCATION);
         //srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
 
         srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
@@ -239,7 +247,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         if(words.size() == 0)
             return ws;
         String [] w = new String[words.size()];
-        ws=Dao.getInstance(this.getApplicationContext()).findWords(words.toArray(w));
+        ws=Dao.getInstance(this.getApplicationContext()).findWordsLikely(words.toArray(w));
         return ws;
     }
 
@@ -273,7 +281,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         LinearLayout layout = (LinearLayout) view.findViewById(R.id.id_recordlayout);
         layout.setPadding(2, 2, 2, 2);
 
-
+        SubtitleView.Line line = mSubtitleView.getTimedText();
         for(Word w: wms)
         {
 
@@ -298,14 +306,14 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             btn.setLayoutParams(param);
             btn.setText("+");
             ll.addView(tv);
-            //先不加button
-            //ll.addView(btn);
+
+            ll.addView(btn);
 
             String mean = w.getMean_cn();
             if(mean != null)
                 mean = mean.replaceAll("\r\n"," ");
-            String word_mean = "<font color='red'>"+w.getWord()+"</font> "
-                            +"<font color='green'>"+w.getAccent()+"</font>"
+            String word_mean = "<font color='red'>"+w.getWord()+"</font>     "
+                            +"<font color='green'>"+w.getAccent()+"</font> <br>"
                             + mean;
             Spanned sp =  Html.fromHtml(word_mean);
 
@@ -314,7 +322,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
             layout.addView(ll);
 
-            btn.setOnClickListener(new AddWordListener(w));
+
+            btn.setOnClickListener(new AddWordListener(w,mFilePath,line));
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(VideoActivity.this);
