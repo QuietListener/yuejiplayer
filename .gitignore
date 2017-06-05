@@ -2,4 +2,4 @@
 /.gradle/**/*
 /.idea/**/*
 .project
-build/**/*
+/build/**/*

@@ -8,4 +8,5 @@
     <string name="refresh">Refresh</string>
     <string name="video">Video</string>
     <string name="review">词表</string>
+    <string name="choose_video">选择视频与字幕</string>
 </resources>

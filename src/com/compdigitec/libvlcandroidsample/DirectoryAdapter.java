@@ -20,6 +20,7 @@ public class DirectoryAdapter extends BaseAdapter {
     public final static String TAG = "/DirectoryAdapter";
     private File curDir = null;
     private File preDir = null;
+    private String baseDir = "juduplayer";
 
     private ArrayList<File> mFiles = new ArrayList<>();
     private boolean mAudio;
@@ -27,6 +28,17 @@ public class DirectoryAdapter extends BaseAdapter {
     public DirectoryAdapter() {
         mAudio = true;
         curDir = Environment.getExternalStorageDirectory();
+        if(curDir.exists() && curDir.canWrite())
+        {
+            String path = curDir.getAbsolutePath()+"/"+ baseDir;
+            File basePath = new File(path);
+            if(!basePath.exists())
+            {
+                basePath.mkdirs();
+                curDir = basePath.getAbsoluteFile();
+            }
+        }
+
         preDir = curDir;
         refresh();
     }

@@ -87,6 +87,9 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     DBHelper helper = null;
 
+    private boolean startAtFlag = false;
+    private Long startAt = 0l;
+
     public MediaPlayer getMediaPlayer()
     {
         return this.mMediaPlayer;
@@ -169,6 +172,10 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             File f = new File(this.mpath);
             String mname = f.getName();
 
+            if(line == null) {
+                return;
+            }
+
             String text = line.getText();
             Record r = new Record(-1, word.getId(), word.getWord(),  this.mpath, mname, new Date(), text, line.getFrom(), line.getTo(), 0);
             Dao.getInstance(VideoActivity.this.getApplicationContext()).saveRecord(r);
@@ -195,13 +202,24 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         // Receive path to play from intent
         Intent intent = getIntent();
         mFilePath = intent.getData().getPath();
+        startAt = intent.getExtras().getLong("startAt");
+        startAtFlag = false;
+        if(startAt == null)
+        {
+            startAt = 0l;
+        }
+        else{
+            startAtFlag = true;
+        }
+
         //mFilePath = intent.getExtras().getString(LOCATION);
         //srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
-
         srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
 
-        Log.d(TAG, "Playing back " + mFilePath);
+        //保存播放文件
+        Dao.getInstance(getApplicationContext()).saveVideoPathes(mFilePath,srtFilePath);
 
+        Log.d(TAG, "Playing back " + mFilePath);
         mSurface = (SurfaceView) findViewById(R.id.surface);
         mSubtitleView = (SubtitleView) findViewById(R.id.subtitle_view);
         mSubtitleView.setVisibility(View.VISIBLE);
@@ -223,7 +241,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         });
 //        holder.addCallback(this);
 
-        createPlayer(mFilePath);
+        createPlayer(mFilePath,0l);
 
 
         mSubtitleView.setPlayer(mMediaPlayer);
@@ -420,7 +438,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
      * Player
      *************/
 
-    private void createPlayer(String media) {
+    private void createPlayer(String media,Long startAt) {
         releasePlayer();
         try {
             if (media.length() > 0) {
@@ -458,7 +476,6 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             Media m = new Media(libvlc, media);
             mMediaPlayer.setMedia(m);
             mMediaPlayer.play();
-
 
         } catch (Exception e) {
             Toast.makeText(this, "Error creating player!", Toast.LENGTH_LONG).show();
@@ -606,9 +623,19 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 case MediaPlayer.Event.Paused:
                 case MediaPlayer.Event.Stopped:
                 case MediaPlayer.Event.TimeChanged:
+
+                    if(startAtFlag == true)
+                    {
+                        player.mMediaPlayer.setTime(startAt);
+                        startAtFlag=false;
+                    }
+
                     Log.d(TAG, "+++time---"+player.mMediaPlayer.getTime());
                     long time  = player.mMediaPlayer.getTime();
                     player.seek_bar.setProgress((int)(time/1000));
+
+                    MainActivity.pre_stop_time = time;
+
 
 
                     MediaPlayer.TrackDescription[] tracks = player.mMediaPlayer.getSpuTracks();

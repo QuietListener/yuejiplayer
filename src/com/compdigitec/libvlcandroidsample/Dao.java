@@ -2,6 +2,7 @@ package com.compdigitec.libvlcandroidsample;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
@@ -12,7 +13,12 @@ import com.compdigitec.libvlcandroidsample.bean.Word;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 /**
  * Created by junjun on 2017/5/4.
@@ -20,10 +26,13 @@ import java.util.List;
 
 public class Dao {
 
+
     DBHelper helper=null;
     public static final String ORDER_DESC = "DESC";
     public static final String ORDER_ASC = "ASC";
     static private Dao instance = null;
+    static Context ctx;
+    static String KEY_VIDEO_PATH = "video_pathes";
 
     static String TAG = "Dao";
     static  Dao getInstance(Context ctx)
@@ -32,6 +41,7 @@ public class Dao {
             if (instance == null) {
                 synchronized (Dao.class) {
                     if (instance == null) {
+                        Dao.ctx = ctx;
                         instance = new Dao(ctx.getApplicationContext());
                     }
                 }
@@ -170,13 +180,7 @@ public class Dao {
 
     }
 
-    /**
-     *
-     * @param offset
-     * @param limit
-     * @param order  order ORDER_DESC or ORDER_ASC
-     * @return
-     */
+
     public int recordsCount() {
         SQLiteDatabase db = null;
         Cursor cursor = null;
@@ -292,5 +296,32 @@ public class Dao {
         }
 
         return r;
+    }
+
+
+    public Set<String> saveVideoPathes(String video_path, String srt_path)
+    {
+        SharedPreferences preferences=ctx.getSharedPreferences("juduvideo",Context.MODE_PRIVATE);
+        Set<String> pathes = preferences.getStringSet(KEY_VIDEO_PATH,null);
+
+        pathes = (pathes == null) ? new TreeSet<String>() : pathes;
+        String data = video_path+"|"+srt_path;
+
+        if(!pathes.contains(data))
+        {
+            pathes.add(data);
+        }
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putStringSet(KEY_VIDEO_PATH,pathes);
+        editor.apply();
+
+        return pathes;
+    }
+
+    public Set<String> getVideoPathes() {
+        SharedPreferences preferences = ctx.getSharedPreferences("juduvideo", Context.MODE_PRIVATE);
+        Set<String> pathes = preferences.getStringSet(KEY_VIDEO_PATH, null);
+        return pathes;
     }
 }
