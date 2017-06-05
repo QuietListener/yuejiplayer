@@ -17,6 +17,7 @@ import android.support.v4.view.GestureDetectorCompat;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -166,7 +167,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         private String mpath;
         SubtitleView.Line line;
 
-        public AddWordListener(Word word, String mpath, SubtitleView.Line line) {
+        public AddWordListener(View view,Word word, String mpath, SubtitleView.Line line) {
             this.word = word;
             this.mpath = mpath;
             this.line = line;
@@ -182,8 +183,12 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             }
 
             String text = line.getText();
+            Dao dao = Dao.getInstance(VideoActivity.this.getApplicationContext());
             Record r = new Record(-1, word.getId(), word.getWord(),  this.mpath, mname, new Date(), text, line.getFrom(), line.getTo(), 0);
-            Dao.getInstance(VideoActivity.this.getApplicationContext()).saveRecord(r);
+            dao.saveRecord(r);
+
+            Toast.makeText(getApplicationContext(),"添加"+word.getWord()+"到生词本",Toast.LENGTH_SHORT).show();
+            view.setBackgroundColor(Color.GRAY);
         }
     }
 
@@ -308,49 +313,71 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         layout.setPadding(2, 2, 2, 2);
 
         SubtitleView.Line line = mSubtitleView.getTimedText();
+
+        LayoutInflater li = LayoutInflater.from(this.getApplicationContext());
+        View tip = li.inflate(R.layout.dialog_words_head_row,null);
+
+        TextView xview = (TextView)tip.findViewById(R.id.dialog_words_head_x);
+        xview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(alertDialog!=null)
+                {
+                    alertDialog.dismiss();;
+                }
+            }
+        });
+
+        layout.addView(tip);
+
         for(Word w: wms)
         {
-
             LinearLayout ll = new LinearLayout(this);
+            ll.setLayoutParams(new LinearLayout.LayoutParams(
+                    LayoutParams.MATCH_PARENT,
+                    LayoutParams.WRAP_CONTENT
+            ));
+
             TextView tv = new TextView(this);
 
             tv.setTextColor(Color.WHITE);
             LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
                     LayoutParams.MATCH_PARENT,
-                    LayoutParams.MATCH_PARENT,
-                    0.2f
+                    LayoutParams.WRAP_CONTENT
             );
             tv.setLayoutParams(param);
 
             Button btn = new Button(this);
+
             param = new LinearLayout.LayoutParams(
-                    LayoutParams.MATCH_PARENT,
                     LayoutParams.WRAP_CONTENT,
-                    1.0f
+                    LayoutParams.WRAP_CONTENT
+
             );
 
+
+            btn.setText("+");
             btn.setLayoutParams(param);
-            btn.setBackgroundResource(R.drawable.ic_add_name);
+
             btn.setPadding(1,1,1,1);
             ll.addView(tv);
 
-            ll.addView(btn);
+            //ll.addView(btn);
 
             String mean = w.getMean_cn();
             if(mean != null)
                 mean = mean.replaceAll("\r\n"," ");
-            String word_mean = "<font color='red'>"+w.getWord()+"</font>     "
-                            +"<font color='green'>"+w.getAccent()+"</font> <br>"
+            String word_mean = "<font color='#2196F3'>"+w.getWord()+"</font>     "
+                            +"<font>"+w.getAccent()+"</font> <br>"
                             + mean;
             Spanned sp =  Html.fromHtml(word_mean);
 
+            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP,10);
             tv.setText(sp);
-            tv.setPadding(0,0,0,10);
-
+            tv.setPadding(1,1,1,4);
             layout.addView(ll);
 
-
-            btn.setOnClickListener(new AddWordListener(w,mFilePath,line));
+            tv.setOnClickListener(new AddWordListener(tv,w,mFilePath,line));
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(VideoActivity.this);

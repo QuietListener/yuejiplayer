@@ -1,0 +1,30 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:baselineAligned="false"
+    android:orientation="horizontal"
+    android:id="@+id/dialog_words_head_row"
+    >
+
+   <TextView
+       android:id="@+id/dialog_words_head_tip"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_weight="1"
+       android:text="点击单词可加入生词表喔~"
+       android:layout_gravity="left"
+       />
+
+    <TextView
+        android:id="@+id/dialog_words_head_x"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="8"
+        android:text="X"
+        android:textSize="16sp"
+        android:gravity="right"
+        />
+
+</LinearLayout>
