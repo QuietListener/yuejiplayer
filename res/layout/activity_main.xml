@@ -12,29 +12,75 @@
 
 
     <LinearLayout
-
-        android:orientation="horizontal"
-        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
         <Button  android:id="@+id/choose_movie"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="选电影"
+            android:textColor="#ffffff"
+            android:layout_gravity="center"
+            android:layout_weight = "2"
+            android:background="@color/color_blue"
+            android:text="选择视频和字幕+"
             />
+
         <Button  android:id="@+id/goto_word_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="复习"
-            />
+            android:textColor="#ffffff"
+            android:layout_gravity="center"
+            android:layout_weight = "1"
+            android:background="@color/color_blue"
+            android:text="单词本"
 
-        <RadioGroup android:id="@+id/radioGroup" android:contentDescription="性别" android:layout_width="wrap_content" android:layout_height="wrap_content">
-                <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/radioShowEn" android:text="@string/sub_show_en_only" ></RadioButton>
-                 <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/radioShowAll" android:text="@string/sub_show_all"></RadioButton>
-              </RadioGroup>
+            />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="字幕显示"
+            android:textColor="@color/color_gray"
+            />
+
+        <RadioGroup android:id="@+id/radioGroup"
+            android:contentDescription="字幕显示"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            >
+
+            <RadioButton android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioShowEn"
+                android:text="@string/sub_show_en_only"
+                android:textColor="@color/color_blue"
+                >
+
+            </RadioButton>
+
+            <RadioButton android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/radioShowAll"
+                android:text="@string/sub_show_all"
+                android:textColor="@color/color_blue"
+                >
+
+            </RadioButton>
+
+        </RadioGroup>
+    </LinearLayout>
 
     <TextView
         android:layout_width="fill_parent"
@@ -47,6 +93,7 @@
         android:id="@+id/pre_movie_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="@color/color_blue"
         />
 
 

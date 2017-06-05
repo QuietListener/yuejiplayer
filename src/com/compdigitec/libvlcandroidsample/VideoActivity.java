@@ -330,7 +330,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             );
 
             btn.setLayoutParams(param);
-            btn.setText("+");
+            btn.setBackgroundResource(R.drawable.ic_add_name);
+            btn.setPadding(1,1,1,1);
             ll.addView(tv);
 
             ll.addView(btn);

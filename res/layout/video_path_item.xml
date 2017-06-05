@@ -3,18 +3,20 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_blue"
+    android:layout_margin="@dimen/abc_text_size_body_2_material"
     >
 
     <TextView android:id="@+id/video_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_blue"
+        android:textColor="#ffffff"
         />
 
     <TextView android:id="@+id/srt_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/color_gray"
+        android:textColor="#ffffff"
         />
 
 </LinearLayout>

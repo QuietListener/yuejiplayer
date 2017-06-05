@@ -319,7 +319,7 @@ public class Dao {
 
         SharedPreferences.Editor editor = preferences.edit();
         editor.putStringSet(KEY_VIDEO_PATH,pathes);
-        editor.apply();
+        editor.commit();
 
         return pathes;
     }

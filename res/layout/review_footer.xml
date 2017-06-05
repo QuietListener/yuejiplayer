@@ -1,0 +1,44 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:orientation="horizontal"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+    android:background="@color/color_blue"
+android:layout_marginTop="6sp">
+
+<Button  android:id="@+id/pre_record_page"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:textSize="14sp"
+    android:layout_gravity="center"
+    android:text="上一页"
+    android:background="@color/color_blue"
+    android:textColor="#ffffff"
+    android:padding="4sp"
+    />
+
+<TextView
+    android:id="@+id/show_cur_page"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_weight="1"
+    android:gravity="center_horizontal"
+    android:textSize="18sp"
+    android:textColor="#ffffff"
+    android:background="@color/color_blue"
+    android:padding="2sp"
+    />
+
+<Button  android:id="@+id/next_record_page"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:layout_gravity="center"
+    android:textSize="14sp"
+    android:text="下一页"
+    android:background="@color/color_blue"
+    android:textColor="#ffffff"
+    android:padding="2sp"
+    />
+</LinearLayout>

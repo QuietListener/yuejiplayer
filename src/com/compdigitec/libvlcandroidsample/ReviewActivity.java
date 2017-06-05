@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.compdigitec.libvlcandroidsample.bean.Word;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -28,6 +30,7 @@ class ViewHolder{
     public TextView word;
     public TextView mean_cn;
     public TextView sentence;
+    public TextView sentence_info;
 }
 
 class ListAdapter  extends BaseAdapter
@@ -71,8 +74,7 @@ class ListAdapter  extends BaseAdapter
             holder.word = (TextView) convertView.findViewById(R.id.word);
             holder.mean_cn = (TextView) convertView.findViewById(R.id.mean_cn);
             holder.sentence = (TextView) convertView.findViewById(R.id.sentence);
-            holder.word.setTextColor(Color.BLACK);
-            holder.sentence.setTextColor(Color.BLACK);
+            holder.sentence_info = (TextView)convertView.findViewById(R.id.sentence_info);
 
             convertView.setTag(holder);
 
@@ -82,19 +84,40 @@ class ListAdapter  extends BaseAdapter
 
         Record r= rs.get(i);
         Word w  = Dao.getInstance(ctx).findWordsByWord(r.getWord());
+        String word = r.getWord();
 
         String accent = w == null ? "" : w.getAccent();
         String mean_cn = w == null ? "" : w.getMean_cn();
 
-        holder.word.setText(r.getWord()+"  "+ accent);
+        String wordText = "<font color=red>" + word +  "</font>" + "  " + accent ;
+
+        holder.word.setText( Html.fromHtml(wordText));
         holder.mean_cn.setText(mean_cn);
 
-        String sub = r.getSubtitle();
+        String sub = r.getSubtitle() == null ? "" : r.getSubtitle() ;
+
+
+        if(sub!=null)
+        {
+            sub = sub.replaceAll(word, " <font color=red>" + word + "</font>");
+        }
         Spanned sp = Html.fromHtml(sub);
-        String content = sp.toString().trim();
-        holder.sentence.setText(content);
+        holder.sentence.setText(sp);
 
+        String movie_name = r.getMovie_name();
+        Date date = r.getDate();
+        String date_str = "";
+        try
+        {
+            date_str = Utils.formatDate(date);
+        }
+        catch (Exception e)
+        {
 
+        }
+
+        String sentence_info_str = ""+date_str +"   " + movie_name;
+        holder.sentence_info.setText(sentence_info_str);
         return convertView;
 
     }
@@ -111,16 +134,19 @@ public class ReviewActivity extends Activity {
     private Button next = null;
     private TextView curPage = null;
     private int totalPage = 0;
-    private int pageSize = 2;
+    private int pageSize = 7;
     private int curPageIndex = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.review);
-        pre = (Button)findViewById(R.id.pre_record_page);
-        next = (Button)findViewById(R.id.next_record_page);
-        curPage = (TextView)findViewById(R.id.show_cur_page);
+
+        View footerView = ((LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.review_footer, null, false);
+
+        pre = (Button)footerView.findViewById(R.id.pre_record_page);
+        next = (Button)footerView.findViewById(R.id.next_record_page);
+        curPage = (TextView)footerView.findViewById(R.id.show_cur_page);
 
         this.recordCount = Dao.getInstance(getApplicationContext()).recordsCount();
         this.totalPage = recordCount / pageSize;
@@ -128,6 +154,8 @@ public class ReviewActivity extends Activity {
 
         lv = (ListView)findViewById(R.id.reviewList);
         la = new ListAdapter(this,0,pageSize);
+
+        lv.addFooterView(footerView);
         lv.setAdapter(la);
 
         curPage.setText(curPageIndex+"/"+this.totalPage);

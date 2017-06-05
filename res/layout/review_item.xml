@@ -3,21 +3,37 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/color_blue"
+    android:layout_marginBottom="1sp"
     >
 
     <TextView android:id="@+id/word"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="14sp"
         />
 
     <TextView android:id="@+id/mean_cn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
+        android:layout_marginBottom="8sp"
         />
 
     <TextView android:id="@+id/sentence"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#ffffff"
+        android:textSize="10sp"
        />
+
+    <TextView android:id="@+id/sentence_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        />
 
 </LinearLayout>

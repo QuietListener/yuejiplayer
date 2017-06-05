@@ -242,15 +242,17 @@ public class ChooseVideoActivity extends Activity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-        case R.id.action_settings:
-            Log.d(TAG, "Setting item selected.");
-            return true;
-        case R.id.action_refresh:
-            mAdapter.refresh();
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
+//        switch(item.getItemId()) {
+//        case R.id.action_settings:
+//            Log.d(TAG, "Setting item selected.");
+//            return true;
+//        case R.id.action_refresh:
+//            mAdapter.refresh();
+//            return true;
+//        default:
+//            return super.onOptionsItemSelected(item);
+//        }
+
+        return true;
     }
 }
