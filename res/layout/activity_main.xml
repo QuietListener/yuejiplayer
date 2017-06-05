@@ -28,6 +28,11 @@
             android:layout_height="wrap_content"
             android:text="复习"
             />
+
+        <RadioGroup android:id="@+id/radioGroup" android:contentDescription="性别" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/radioShowEn" android:text="@string/sub_show_en_only" ></RadioButton>
+                 <RadioButton android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/radioShowAll" android:text="@string/sub_show_all"></RadioButton>
+              </RadioGroup>
     </LinearLayout>
 
 

@@ -25,6 +25,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,6 +54,10 @@ public class MainActivity extends Activity {
 
     private ListView lv = null;
     private ListAdapter la;
+    private RadioGroup group = null;
+
+    private RadioButton radioShowEn = null;
+    private RadioButton radioShowAll = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +79,44 @@ public class MainActivity extends Activity {
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, ReviewActivity.class);
                 startActivity(intent);
+            }
+        });
+
+
+
+        this.radioShowEn = (RadioButton)this.findViewById(R.id.radioShowEn);
+        this.radioShowAll = (RadioButton)this.findViewById(R.id.radioShowAll);
+
+        String subshow = Dao.getInstance(MainActivity.this.getApplicationContext()).getSubShow();
+        if(subshow.equals(Dao.KEY_SUB_SHOW_EN_ONLY))
+        {
+            this.radioShowEn.setChecked(true);
+        }
+        else
+        {
+            this.radioShowAll.setChecked(true);
+        }
+
+
+        this.group = (RadioGroup)this.findViewById(R.id.radioGroup);
+
+        //绑定一个匿名监听器
+        group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(RadioGroup arg0, int arg1) {
+                int radioButtonId = arg0.getCheckedRadioButtonId();
+                RadioButton rb = (RadioButton)MainActivity.this.findViewById(radioButtonId);
+                String str = rb.getText().toString();
+
+                if(str.equals(getString(R.string.sub_show_all)))
+                {
+                    Dao.getInstance(MainActivity.this.getApplicationContext()).confSubShow(Dao.KEY_SUB_SHOW_ALL);
+                }
+                else if(str.equals(getString(R.string.sub_show_en_only)))
+                {
+                    Dao.getInstance(MainActivity.this.getApplicationContext()).confSubShow(Dao.KEY_SUB_SHOW_EN_ONLY);
+                }
             }
         });
 

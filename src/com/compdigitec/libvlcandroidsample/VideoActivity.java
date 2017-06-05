@@ -90,6 +90,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     private boolean startAtFlag = false;
     private Long startAt = 0l;
 
+    private String sub_show = Dao.KEY_SUB_SHOW_EN_ONLY;
+
     public MediaPlayer getMediaPlayer()
     {
         return this.mMediaPlayer;
@@ -138,9 +140,12 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();
                     mSubtitleView.setOnlyShowEn(false);
+
                 } else {
                     mMediaPlayer.play();
-                    mSubtitleView.setOnlyShowEn(true);
+                    boolean onlyShowEn = sub_show.equals(Dao.KEY_SUB_SHOW_ALL) ? false : true;
+                    mSubtitleView.setOnlyShowEn(onlyShowEn);
+
                 }
             }
 
@@ -226,6 +231,9 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         //subtitleView1 =  (SurfaceView) findViewById(R.id.subtitle_view1);
 
         mSubtitleView.setSubSource(srtFilePath , null);
+        sub_show = Dao.getInstance(this.getApplicationContext()).getSubShow();
+        boolean onlyShowEn = sub_show.equals(Dao.KEY_SUB_SHOW_ALL) ? false : true;
+        mSubtitleView.setOnlyShowEn(onlyShowEn);
 
         seek_bar = (SeekBar)findViewById(R.id.seek_bar);
 
@@ -373,6 +381,12 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         if(getRequestedOrientation()!=ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
         {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+
+        if(mSubtitleView!= null) {
+            sub_show = Dao.getInstance(this.getApplicationContext()).getSubShow();
+            boolean onlyShowEn = sub_show.equals(Dao.KEY_SUB_SHOW_ALL) ? false : true;
+            mSubtitleView.setOnlyShowEn(onlyShowEn);
         }
 
         super.onResume();

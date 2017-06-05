@@ -34,6 +34,11 @@ public class Dao {
     static Context ctx;
     static String KEY_VIDEO_PATH = "video_pathes";
 
+    public static String KEY_SUB_SHOW = "key_sub_show";
+    public static String KEY_SUB_SHOW_EN_ONLY = "key_sub_show_en_only";
+    public static String KEY_SUB_SHOW_ALL = "key_sub_show_all";
+
+
     static String TAG = "Dao";
     static  Dao getInstance(Context ctx)
     {
@@ -319,9 +324,36 @@ public class Dao {
         return pathes;
     }
 
+
     public Set<String> getVideoPathes() {
         SharedPreferences preferences = ctx.getSharedPreferences("juduvideo", Context.MODE_PRIVATE);
         Set<String> pathes = preferences.getStringSet(KEY_VIDEO_PATH, null);
         return pathes;
     }
+
+    public String getSubShow() {
+        SharedPreferences preferences = ctx.getSharedPreferences("juduvideo", Context.MODE_PRIVATE);
+        String ret = preferences.getString(KEY_SUB_SHOW,KEY_SUB_SHOW_ALL);
+        return ret;
+    }
+
+    public String  confSubShow(String showStrategy)
+    {
+        SharedPreferences preferences=ctx.getSharedPreferences("juduvideo",Context.MODE_PRIVATE);
+
+        String old_sub = getSubShow();
+        if(old_sub != null && old_sub.equals(showStrategy))
+        {
+            return old_sub;
+        }
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(KEY_SUB_SHOW,showStrategy);
+        editor.apply();
+
+        return showStrategy;
+    }
+
+
+
 }

@@ -9,4 +9,7 @@
     <string name="video">Video</string>
     <string name="review">词表</string>
     <string name="choose_video">选择视频与字幕</string>
+    <string name="sub_show_en_only">只显示英文字幕</string>
+    <string name="sub_show_all">显示所有字幕</string>
+
 </resources>

@@ -262,6 +262,12 @@ public class SubtitleView extends TextView implements Runnable{
         updateText();
     }
 
+
+    public boolean getOnlyShowEn()
+    {
+        return onlyShowEn;
+    }
+
     private static long parse(String in) {
         long hours = Long.parseLong(in.split(":")[0].trim());
         long minutes = Long.parseLong(in.split(":")[1].trim());
