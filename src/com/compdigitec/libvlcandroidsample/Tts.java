@@ -2,6 +2,7 @@ package com.compdigitec.libvlcandroidsample;
 
 import android.content.Context;
 import android.speech.tts.TextToSpeech;
+import android.util.Log;
 import android.widget.Toast;
 
 import java.util.Locale;
@@ -12,17 +13,17 @@ import java.util.Locale;
 
 public class Tts {
 
-    private  static Context ctx = null;
     private TextToSpeech mTextToSpeech = null;
-    static private Tts tts = null;
-
-    private Tts(Context ctx)
+    private Context ctx;
+    public Tts(Context ctx)
     {
+        this.ctx = ctx;
 
-        Tts.ctx = ctx;
+        try{
+
 
         //实例并初始化TTS对象
-        mTextToSpeech = new TextToSpeech(this.ctx,new TextToSpeech.OnInitListener()
+        mTextToSpeech = new TextToSpeech(ctx,new TextToSpeech.OnInitListener()
         {
 
             @Override
@@ -41,13 +42,18 @@ public class Tts {
             }
 
         });
+        }
+        catch (Exception e)
+        {
+            Log.e("Tts",e.toString());
+        }
     }
 
     public void speak(String str)
     {
         if(str == null)
             return;
-        
+
 
         if(mTextToSpeech.isSpeaking())
         {
@@ -55,18 +61,15 @@ public class Tts {
         }
 
         mTextToSpeech.speak(str, TextToSpeech.QUEUE_FLUSH, null);
+
     }
 
-    static public synchronized  Tts instance(Context ctx) {
 
-        if(tts == null || Tts.ctx != ctx)
+    public void destroy()
+    {
+        if (mTextToSpeech!=null)
         {
-            tts = new Tts(ctx);
+            mTextToSpeech.stop();
         }
-
-        return tts;
     }
-
-
-
 }

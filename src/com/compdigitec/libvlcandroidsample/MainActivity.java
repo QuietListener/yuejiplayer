@@ -122,7 +122,7 @@ public class MainActivity extends Activity {
         });
 
         lv = (ListView)findViewById(R.id.pre_movie_path);
-        la = new ListAdapter(getApplicationContext(),10);
+        la = new ListAdapter(getApplicationContext(),10000);
 
         lv.setAdapter(la);
         la.notifyDataSetChanged();
@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
             holder.video_path.setText(video_path);
             holder.srt_path.setText(srt_path);
 
-            holder.video_path.setOnClickListener(new StartVideoListener(video_path));
+            convertView.setOnClickListener(new StartVideoListener(video_path));
             return convertView;
         }
     }
@@ -241,11 +241,20 @@ public class MainActivity extends Activity {
 
         @Override
         public void onClick(View view) {
+            File file = new File(path);
+            if(file.isDirectory() || !file.exists())
+            {
+                Utils.displayLongToask(getApplicationContext(),"文件不存在了~");
+                return;
+            }
+
+            Utils.displayLongToask(getApplicationContext(),"开始播放"+this.path);
             Intent intent = new Intent(MainActivity.this, VideoActivity.class);
             intent.setData(Uri.fromFile(new File(this.path)));
             intent.putExtra(VideoActivity.LOCATION, pre_path);
             intent.putExtra("startAt", pre_stop_time);
             startActivity(intent);
+
         }
     }
 

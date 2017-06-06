@@ -47,6 +47,7 @@ public class SubtitleView extends TextView implements Runnable{
     private long next_time = 0l;
     private boolean onlyShowEn = true;
     private int subIndex = 0;
+    private static int DefaultTimeSpan = 5000;
 
     private static final String seperator = "<br\\s*>|<br\\s*/>|\r\n|\r|\n";
     private static final String seperatorEnd = "(<br\\s*>|<br\\s*/>|\r\n|\r|\n)$";
@@ -130,6 +131,11 @@ public class SubtitleView extends TextView implements Runnable{
     }
 
     private Line getTimedText(long currentPosition) {
+        if(this.track ==null)
+        {
+            return null;
+        }
+
         Line result = null;
 
         subIndex = 0;
@@ -149,10 +155,15 @@ public class SubtitleView extends TextView implements Runnable{
 
     private Line getPreTimedText(long currentPosition) {
 
-        List<Line> ls = new ArrayList<>(this.track.values());
-        if(this.subIndex>1 && this.subIndex <= ls.size())
+        if(this.track ==null)
         {
-            this.subIndex-=1;
+            return null;
+        }
+
+        List<Line> ls = new ArrayList<>(this.track.values());
+        if(this.subIndex>2 && this.subIndex <= ls.size())
+        {
+            this.subIndex-=2;
             return ls.get(this.subIndex);
         }
 
@@ -161,6 +172,11 @@ public class SubtitleView extends TextView implements Runnable{
 
 
     private Line getNextTimedText(long currentPosition) {
+
+        if(this.track ==null)
+        {
+            return null;
+        }
 
         List<Line> ls = new ArrayList<>(this.track.values());
         if(this.subIndex>=0 && this.subIndex < ls.size()-1)
@@ -280,13 +296,13 @@ public class SubtitleView extends TextView implements Runnable{
 
     public long getPre_time() {
         Line line = this.getPreTimedText(this.player.getTime());
-        pre_time = line == null ? 0l : line.from;
+        pre_time = line == null ? -1 : line.from;
         return pre_time;
     }
 
     public long getNext_time() {
         Line line = this.getNextTimedText(this.player.getTime());
-        next_time = line == null ? player.getMedia().getDuration() : line.from;
+        next_time = line == null ? -1 : line.from;
         return next_time;
     }
 

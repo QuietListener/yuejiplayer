@@ -13,6 +13,9 @@
         android:id="@+id/textView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/color_blue"
+        android:textColor="#ffffff"
+        android:textSize="12sp"
         android:text="@string/hello_world" />
 
 

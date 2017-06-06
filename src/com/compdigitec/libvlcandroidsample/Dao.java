@@ -234,23 +234,62 @@ public class Dao {
 
             while (cursor.moveToNext())
             {
-                Integer id = cursor.getInt(cursor.getColumnIndex("_id"));
-                Integer word_id = cursor.getInt(cursor.getColumnIndex("word_id"));
-                String word = cursor.getString(cursor.getColumnIndex("word"));
-                String movie_path = cursor.getString(cursor.getColumnIndex("movie_path"));
-                String movie_name = cursor.getString(cursor.getColumnIndex("movie_name"));
+                Record r = cursor2Record(cursor);
+                ret.add(r);
+            }
+        }
+        finally
+        {
+            if(db != null)
+            {
+                db.close();
+            }
+        }
 
-                Long  datel = cursor.getLong(cursor.getColumnIndex("date"));
+        return ret;
+    }
 
-                Date date = new Date(datel);
 
-                String subtitle = cursor.getString(cursor.getColumnIndex("subtitle"));
-                int status = cursor.getInt(cursor.getColumnIndex("status"));
-                long time_from = cursor.getLong(cursor.getColumnIndex("time_from"));
-                long time_to = cursor.getLong(cursor.getColumnIndex("time_to"));
+    private Record cursor2Record(Cursor cursor)
+    {
+        Integer id = cursor.getInt(cursor.getColumnIndex("_id"));
+        Integer word_id = cursor.getInt(cursor.getColumnIndex("word_id"));
+        String word = cursor.getString(cursor.getColumnIndex("word"));
+        String movie_path = cursor.getString(cursor.getColumnIndex("movie_path"));
+        String movie_name = cursor.getString(cursor.getColumnIndex("movie_name"));
 
-                Record r = new Record( id,  word_id,  word,  movie_path,  movie_name,  date,  subtitle,time_from,time_to,  status) ;
+        Long  datel = cursor.getLong(cursor.getColumnIndex("date"));
 
+        Date date = new Date(datel);
+
+        String subtitle = cursor.getString(cursor.getColumnIndex("subtitle"));
+        int status = cursor.getInt(cursor.getColumnIndex("status"));
+        long time_from = cursor.getLong(cursor.getColumnIndex("time_from"));
+        long time_to = cursor.getLong(cursor.getColumnIndex("time_to"));
+
+        Record r = new Record( id,  word_id,  word,  movie_path,  movie_name,  date,  subtitle,time_from,time_to,  status) ;
+        return r;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public List<Record> findRecords(String word, String moive_name,String subtitle)
+    {
+
+
+        SQLiteDatabase db = null;
+        List<Record> ret = new ArrayList<>();
+
+        try {
+            db = this.helper.getReadableDatabase();
+
+            Cursor cursor = db.rawQuery("select * from records where word = ? and movie_name = ? and subtitle=? ",new String []{word, moive_name, subtitle});
+            while (cursor.moveToNext())
+            {
+
+                Record r = cursor2Record(cursor);
                 ret.add(r);
             }
 
@@ -266,8 +305,6 @@ public class Dao {
 
         return ret;
     }
-
-
 
     public Record saveRecord(Record r)
     {
@@ -311,16 +348,15 @@ public class Dao {
 
         pathes = (pathes == null) ? new TreeSet<String>() : pathes;
         String data = video_path+"|"+srt_path;
-
-        if(!pathes.contains(data))
+        Set<String> s = new TreeSet<>(pathes);
+        if(!s.contains(data))
         {
-            pathes.add(data);
+            s.add(data);
         }
 
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putStringSet(KEY_VIDEO_PATH,pathes);
+        editor.putStringSet(KEY_VIDEO_PATH,s);
         editor.commit();
-
         return pathes;
     }
 

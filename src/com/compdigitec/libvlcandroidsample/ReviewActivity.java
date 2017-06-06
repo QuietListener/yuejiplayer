@@ -25,109 +25,6 @@ import java.util.Date;
 import java.util.List;
 
 
-class ViewHolder{
-
-    public TextView word;
-    public TextView mean_cn;
-    public TextView sentence;
-    public TextView sentence_info;
-}
-
-class ListAdapter  extends BaseAdapter
-{
-    private List<Record> rs = new ArrayList<>();
-    private LayoutInflater mInflater;
-    private Context ctx = null;
-
-    public ListAdapter(Context ctx,int offset,int pageSize)
-    {
-        this.ctx = ctx;
-        this.mInflater = LayoutInflater.from(ctx);
-        rs = Dao.getInstance(ctx.getApplicationContext()).findRecords(offset, pageSize, Dao.ORDER_DESC);
-        System.out.println(rs);
-    }
-
-    @Override
-    public int getCount() {
-        return rs.size();
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return rs.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int i, View convertView, ViewGroup viewGroup) {
-
-        ViewHolder holder = null;
-        if (convertView == null) {
-
-            holder=new ViewHolder();
-
-            convertView = mInflater.inflate(R.layout.review_item, null);
-            holder.word = (TextView) convertView.findViewById(R.id.word);
-            holder.mean_cn = (TextView) convertView.findViewById(R.id.mean_cn);
-            holder.sentence = (TextView) convertView.findViewById(R.id.sentence);
-            holder.sentence_info = (TextView)convertView.findViewById(R.id.sentence_info);
-
-            convertView.setTag(holder);
-
-        }else {
-            holder = (ViewHolder)convertView.getTag();
-        }
-
-        Record r= rs.get(i);
-        Word w  = Dao.getInstance(ctx).findWordsByWord(r.getWord());
-        final String word = r.getWord();
-
-        String accent = w == null ? "" : w.getAccent();
-        String mean_cn = w == null ? "" : w.getMean_cn();
-
-        String wordText = "<font color=red>" + word +  "</font>" + "  " + accent ;
-
-        holder.word.setText( Html.fromHtml(wordText));
-        holder.mean_cn.setText(mean_cn);
-
-        String sub = r.getSubtitle() == null ? "" : r.getSubtitle() ;
-
-
-        if(sub!=null)
-        {
-            sub = sub.replaceAll(word, " <font color=red>" + word + "</font>");
-        }
-        Spanned sp = Html.fromHtml(sub);
-        holder.sentence.setText(sp);
-
-        String movie_name = r.getMovie_name();
-        Date date = r.getDate();
-        String date_str = "";
-        try
-        {
-            date_str = Utils.formatDate(date);
-        }
-        catch (Exception e)
-        {
-
-        }
-
-        String sentence_info_str = ""+date_str +"   " + movie_name;
-        holder.sentence_info.setText(sentence_info_str);
-        convertView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Tts.instance(ctx).speak(word);
-            }
-        });
-        return convertView;
-
-    }
-}
 
 
 
@@ -142,6 +39,15 @@ public class ReviewActivity extends Activity {
     private int totalPage = 0;
     private int pageSize = 7;
     private int curPageIndex = 1;
+    Tts tts;
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        this.tts.destroy();
+        this.tts = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,12 +56,13 @@ public class ReviewActivity extends Activity {
 
         View footerView = ((LayoutInflater)this.getSystemService(LAYOUT_INFLATER_SERVICE)).inflate(R.layout.review_footer, null, false);
 
+        tts = new Tts(this);
         pre = (Button)footerView.findViewById(R.id.pre_record_page);
         next = (Button)footerView.findViewById(R.id.next_record_page);
         curPage = (TextView)footerView.findViewById(R.id.show_cur_page);
 
         this.recordCount = Dao.getInstance(getApplicationContext()).recordsCount();
-        this.totalPage = recordCount / pageSize;
+        this.totalPage = (recordCount / pageSize) +1;
         this.curPageIndex = 1;
 
         lv = (ListView)findViewById(R.id.reviewList);
@@ -195,5 +102,111 @@ public class ReviewActivity extends Activity {
                 curPage.setText(curPageIndex+"/"+totalPage);
             }
         });
+
+    }
+
+
+    class ViewHolder{
+
+        public TextView word;
+        public TextView mean_cn;
+        public TextView sentence;
+        public TextView sentence_info;
+    }
+
+    class ListAdapter  extends BaseAdapter
+    {
+        private List<Record> rs = new ArrayList<>();
+        private LayoutInflater mInflater;
+        private Context ctx = null;
+
+        public ListAdapter(Context ctx,int offset,int pageSize)
+        {
+            this.ctx = ctx;
+            this.mInflater = LayoutInflater.from(ctx);
+            rs = Dao.getInstance(ctx.getApplicationContext()).findRecords(offset, pageSize, Dao.ORDER_DESC);
+            System.out.println(rs);
+        }
+
+        @Override
+        public int getCount() {
+            return rs.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return rs.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int i, View convertView, ViewGroup viewGroup) {
+
+            ViewHolder holder = null;
+            if (convertView == null) {
+
+                holder=new ViewHolder();
+
+                convertView = mInflater.inflate(R.layout.review_item, null);
+                holder.word = (TextView) convertView.findViewById(R.id.word);
+                holder.mean_cn = (TextView) convertView.findViewById(R.id.mean_cn);
+                holder.sentence = (TextView) convertView.findViewById(R.id.sentence);
+                holder.sentence_info = (TextView)convertView.findViewById(R.id.sentence_info);
+
+                convertView.setTag(holder);
+
+            }else {
+                holder = (ViewHolder)convertView.getTag();
+            }
+
+            Record r= rs.get(i);
+            Word w  = Dao.getInstance(ctx).findWordsByWord(r.getWord());
+            final String word = r.getWord();
+
+            String accent = w == null ? "" : w.getAccent();
+            String mean_cn = w == null ? "" : w.getMean_cn();
+
+            String wordText = "<font color=red>" + word +  "</font>" + "  " + accent ;
+
+            holder.word.setText( Html.fromHtml(wordText));
+            holder.mean_cn.setText(mean_cn);
+
+            String sub = r.getSubtitle() == null ? "" : r.getSubtitle() ;
+
+
+            if(sub!=null)
+            {
+                sub = sub.replaceAll(word, " <font color=red>" + word + "</font>");
+            }
+            Spanned sp = Html.fromHtml(sub);
+            holder.sentence.setText(sp);
+
+            String movie_name = r.getMovie_name();
+            Date date = r.getDate();
+            String date_str = "";
+            try
+            {
+                date_str = Utils.formatDate(date);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            String sentence_info_str = ""+date_str +"   " + movie_name;
+            holder.sentence_info.setText(sentence_info_str);
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ReviewActivity.this.tts.speak(word);
+                    }
+            });
+            return convertView;
+
+        }
     }
 }

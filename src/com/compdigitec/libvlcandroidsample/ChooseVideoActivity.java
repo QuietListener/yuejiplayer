@@ -173,6 +173,7 @@ public class ChooseVideoActivity extends Activity
                     intent.setData(Uri.fromFile(new File(file_path)));
                     intent.putExtra(VideoActivity.LOCATION, file_path);
                     mPlayingVideo = true;
+                    Utils.displayLongToask(getApplicationContext(),"开始播放"+file_path);
                     startActivity(intent);
                 }
                 else

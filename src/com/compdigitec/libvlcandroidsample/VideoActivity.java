@@ -93,6 +93,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
     private String sub_show = Dao.KEY_SUB_SHOW_EN_ONLY;
 
+    private Tts tts = null;
     public MediaPlayer getMediaPlayer()
     {
         return this.mMediaPlayer;
@@ -108,23 +109,37 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             final int FLING_MIN_DISTANCE=100;//X或者y轴上移动的距离(像素)
             final int FLING_MIN_VELOCITY=200;//x或者y轴上的移动速度(像素/秒)
 
+            long time = mMediaPlayer.getTime();
             if((e1.getX()-e2.getX())>FLING_MIN_DISTANCE && Math.abs(velocityX)>FLING_MIN_VELOCITY)
             {
-                Toast.makeText(VideoActivity.this, "左滑:上一字幕", Toast.LENGTH_SHORT).show();
-                long time = mMediaPlayer.getTime();
-                if(mSubtitleView.getPre_time() <= 0l)
+                long pre_time = mSubtitleView.getPre_time();
+                if(pre_time < 0l)
+                {
                     time = time - 5000;
+                    Utils.displayShortToask(VideoActivity.this,"左:上一个5秒");
+                }
                 else
                 {
-                    time = mSubtitleView.getPre_time()-2;
+                    time = pre_time;
+                    Utils.displayShortToask(VideoActivity.this,"左滑:上一字幕");
                 }
 
                 mMediaPlayer.setTime(time);
             }
             else if((e2.getX()-e1.getX())>FLING_MIN_DISTANCE && Math.abs(velocityX)>FLING_MIN_VELOCITY)
             {
-                Toast.makeText(VideoActivity.this, "右滑:下一字幕", Toast.LENGTH_SHORT).show();
-                Long time = mSubtitleView.getNext_time() - 2;
+
+                Long next_time = mSubtitleView.getNext_time();
+                if(next_time < 0l)
+                {
+                    time =time+5000;
+                    Utils.displayShortToask(VideoActivity.this,"右滑:下一个5秒");
+                }
+                else
+                {
+                    time = next_time-10;
+                    Utils.displayShortToask(VideoActivity.this,"右滑:下一字幕");
+                }
                 //time = time + 5000;
                 mMediaPlayer.setTime(time);
             }
@@ -141,11 +156,13 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
                 if (mMediaPlayer.isPlaying()) {
                     mMediaPlayer.pause();
                     mSubtitleView.setOnlyShowEn(false);
+                    Utils.displayShortToask(getApplicationContext(),"paused");
 
                 } else {
                     mMediaPlayer.play();
                     boolean onlyShowEn = sub_show.equals(Dao.KEY_SUB_SHOW_ALL) ? false : true;
                     mSubtitleView.setOnlyShowEn(onlyShowEn);
+                    Utils.displayShortToask(getApplicationContext(),"playing");
 
                 }
             }
@@ -175,6 +192,10 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         @Override
         public void onClick(View view) {
+
+            if(this.word.getWord() != null)
+                tts.speak(this.word.getWord());
+
             File f = new File(this.mpath);
             String mname = f.getName();
 
@@ -184,13 +205,21 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
             String text = line.getText();
             Dao dao = Dao.getInstance(VideoActivity.this.getApplicationContext());
+
+            List<Record> rs = dao.findRecords(word.getWord(),mname,text);
+
+            if(rs!=null && rs.size() > 0)
+            {
+                Utils.displayShortToask(getApplicationContext(),word.getWord()+"已经添加过了~");
+                return;
+            }
+
             Record r = new Record(-1, word.getId(), word.getWord(),  this.mpath, mname, new Date(), text, line.getFrom(), line.getTo(), 0);
             dao.saveRecord(r);
 
             Toast.makeText(getApplicationContext(),"添加"+word.getWord()+"到生词本",Toast.LENGTH_SHORT).show();
             view.setBackgroundColor(Color.GRAY);
-            if(this.word.getWord() != null)
-                 Tts.instance(VideoActivity.this).speak(this.word.getWord());
+
         }
     }
 
@@ -211,6 +240,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         setContentView(R.layout.sample);
 
+        tts = new Tts(this);
         // Receive path to play from intent
         Intent intent = getIntent();
         mFilePath = intent.getData().getPath();
@@ -226,7 +256,15 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         //mFilePath = intent.getExtras().getString(LOCATION);
         //srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
-        srtFilePath = mFilePath.replace(".mp4",".srt").replace(".avi",".srt");
+        String ext_name = Utils.fileExt(mFilePath);
+        srtFilePath = mFilePath.replace(ext_name,".srt");
+
+        File srtFile = new File(srtFilePath);
+
+        if(!srtFile.exists())
+        {
+            srtFilePath = "没有字幕文件";
+        }
 
         //保存播放文件
         Dao.getInstance(getApplicationContext()).saveVideoPathes(mFilePath,srtFilePath);
@@ -297,10 +335,11 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         for (int i = 0; i < words.length; i++)
         {
             String name = words[i];
-            name = name.replaceAll("[\\.|\"|！|!|:|;|。|\\(|\\)]", "").trim().toLowerCase();
+            name = name.replaceAll("['|'|，|,|\\.|\"|！|!|:|;|。|\\(|\\)]", "").trim().toLowerCase();
             if (name.length() <= 2 )
                 continue;
 
+            name = name.toLowerCase();
             words_.add(name);
         }
 
@@ -319,8 +358,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         LayoutInflater li = LayoutInflater.from(this.getApplicationContext());
         View tip = li.inflate(R.layout.dialog_words_head_row,null);
 
-        TextView xview = (TextView)tip.findViewById(R.id.dialog_words_head_x);
-        xview.setOnClickListener(new View.OnClickListener() {
+        tip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(alertDialog!=null)
@@ -432,6 +470,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
     protected void onDestroy() {
         super.onDestroy();
         releasePlayer();
+        tts.destroy();
+        tts = null;
     }
 
     /*************
@@ -486,10 +526,10 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
         releasePlayer();
         try {
             if (media.length() > 0) {
-                Toast toast = Toast.makeText(this, media, Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0,
-                        0);
-                toast.show();
+//                Toast toast = Toast.makeText(this, media, Toast.LENGTH_LONG);
+//                toast.setGravity(Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0,
+//                        0);
+//                toast.show();
             }
 
             // Create LibVLC
