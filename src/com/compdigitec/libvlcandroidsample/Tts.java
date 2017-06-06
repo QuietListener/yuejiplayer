@@ -47,6 +47,7 @@ public class Tts {
     {
         if(str == null)
             return;
+        
 
         if(mTextToSpeech.isSpeaking())
         {
