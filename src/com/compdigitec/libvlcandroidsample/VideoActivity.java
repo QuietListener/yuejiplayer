@@ -189,6 +189,8 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
             Toast.makeText(getApplicationContext(),"添加"+word.getWord()+"到生词本",Toast.LENGTH_SHORT).show();
             view.setBackgroundColor(Color.GRAY);
+            if(this.word.getWord() != null)
+                 Tts.instance(VideoActivity.this).speak(this.word.getWord());
         }
     }
 

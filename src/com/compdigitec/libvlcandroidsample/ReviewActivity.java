@@ -84,7 +84,7 @@ class ListAdapter  extends BaseAdapter
 
         Record r= rs.get(i);
         Word w  = Dao.getInstance(ctx).findWordsByWord(r.getWord());
-        String word = r.getWord();
+        final String word = r.getWord();
 
         String accent = w == null ? "" : w.getAccent();
         String mean_cn = w == null ? "" : w.getMean_cn();
@@ -118,6 +118,12 @@ class ListAdapter  extends BaseAdapter
 
         String sentence_info_str = ""+date_str +"   " + movie_name;
         holder.sentence_info.setText(sentence_info_str);
+        convertView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Tts.instance(ctx).speak(word);
+            }
+        });
         return convertView;
 
     }

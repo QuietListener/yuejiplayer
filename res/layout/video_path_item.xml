@@ -11,12 +11,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
+        android:textSize="10sp"
         />
 
     <TextView android:id="@+id/srt_path"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="#ffffff"
+        android:textSize="10sp"
         />
 
 </LinearLayout>
