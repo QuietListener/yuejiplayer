@@ -103,6 +103,10 @@ public class ReviewActivity extends Activity {
             }
         });
 
+
+
+        Utils.statistics(getApplicationContext(),"review");
+
     }
 
 

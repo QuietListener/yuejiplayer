@@ -86,6 +86,7 @@ public class ChooseVideoActivity extends Activity
                 if(helper == null)
                      helper = new DBHelper(this);
                 helper.createDataBase();
+                Utils.statistics(getApplicationContext(),"choose_video");
 
 
         } catch (Exception e) {

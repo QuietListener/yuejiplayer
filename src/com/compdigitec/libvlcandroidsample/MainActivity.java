@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.telephony.TelephonyManager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -69,7 +70,7 @@ public class MainActivity extends Activity {
         choose_movie_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, ChooseVideoActivity.class);
+                Intent intent = new Intent(MainActivity.this, ShowOnlineMovies.class);
                 startActivity(intent);
             }
         });
@@ -84,22 +85,18 @@ public class MainActivity extends Activity {
         });
 
 
-
-        this.radioShowEn = (RadioButton)this.findViewById(R.id.radioShowEn);
-        this.radioShowAll = (RadioButton)this.findViewById(R.id.radioShowAll);
+        this.radioShowEn = (RadioButton) this.findViewById(R.id.radioShowEn);
+        this.radioShowAll = (RadioButton) this.findViewById(R.id.radioShowAll);
 
         String subshow = Dao.getInstance(MainActivity.this.getApplicationContext()).getSubShow();
-        if(subshow.equals(Dao.KEY_SUB_SHOW_EN_ONLY))
-        {
+        if (subshow.equals(Dao.KEY_SUB_SHOW_EN_ONLY)) {
             this.radioShowEn.setChecked(true);
-        }
-        else
-        {
+        } else {
             this.radioShowAll.setChecked(true);
         }
 
 
-        this.group = (RadioGroup)this.findViewById(R.id.radioGroup);
+        this.group = (RadioGroup) this.findViewById(R.id.radioGroup);
 
         //绑定一个匿名监听器
         group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -107,26 +104,26 @@ public class MainActivity extends Activity {
             @Override
             public void onCheckedChanged(RadioGroup arg0, int arg1) {
                 int radioButtonId = arg0.getCheckedRadioButtonId();
-                RadioButton rb = (RadioButton)MainActivity.this.findViewById(radioButtonId);
+                RadioButton rb = (RadioButton) MainActivity.this.findViewById(radioButtonId);
                 String str = rb.getText().toString();
 
-                if(str.equals(getString(R.string.sub_show_all)))
-                {
+                if (str.equals(getString(R.string.sub_show_all))) {
                     Dao.getInstance(MainActivity.this.getApplicationContext()).confSubShow(Dao.KEY_SUB_SHOW_ALL);
-                }
-                else if(str.equals(getString(R.string.sub_show_en_only)))
-                {
+                } else if (str.equals(getString(R.string.sub_show_en_only))) {
                     Dao.getInstance(MainActivity.this.getApplicationContext()).confSubShow(Dao.KEY_SUB_SHOW_EN_ONLY);
                 }
             }
         });
 
-        lv = (ListView)findViewById(R.id.pre_movie_path);
-        la = new ListAdapter(getApplicationContext(),10000);
+        lv = (ListView) findViewById(R.id.pre_movie_path);
+        la = new ListAdapter(getApplicationContext(), 10000);
 
         lv.setAdapter(la);
         la.notifyDataSetChanged();
+
+        Utils.statistics(getApplicationContext(),"main");
     }
+
 
     @Override
     public void onResume()

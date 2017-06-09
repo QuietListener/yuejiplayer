@@ -197,6 +197,11 @@ public class Dao {
             int count = cursor.getInt(0);
             return count;
         }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return 0;
+        }
         finally
         {
             if(cursor != null)
@@ -237,6 +242,11 @@ public class Dao {
                 Record r = cursor2Record(cursor);
                 ret.add(r);
             }
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+            return ret;
         }
         finally
         {

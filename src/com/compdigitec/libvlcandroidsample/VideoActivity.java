@@ -240,7 +240,11 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
 
         setContentView(R.layout.sample);
 
-        tts = new Tts(this);
+        if(tts == null )
+        {
+            tts = new Tts(this);
+        }
+
         // Receive path to play from intent
         Intent intent = getIntent();
         mFilePath = intent.getData().getPath();
@@ -309,6 +313,7 @@ public class VideoActivity extends Activity implements IVLCVout.Callback,Surface
             }
         });
 
+        Utils.statistics(getApplicationContext(),"video");
 
     }
 
